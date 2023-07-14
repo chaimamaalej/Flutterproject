@@ -91,7 +91,7 @@ class _LoginContentState extends State<LoginContent>
           MaterialPageRoute(builder: (context) => FormPage()),
         );},
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 14),
           shape: const StadiumBorder(),
           primary: kSecondaryColor,
           elevation: 8,
@@ -134,7 +134,6 @@ class _LoginContentState extends State<LoginContent>
       inputField('Email', Ionicons.mail_outline),
       inputField('Password', Ionicons.lock_closed_outline),
       formButton('Fill In The Form'),
-      loginButton('Sign Up'),
     ];
 
     loginContent = [

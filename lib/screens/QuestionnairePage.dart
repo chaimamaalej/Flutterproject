@@ -58,7 +58,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _finishQuestionnaire,
-              child: Text('Finish'),
+              child: Text('Finish Registration'),
             ),
           ],
         ),

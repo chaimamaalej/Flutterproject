@@ -1,10 +1,13 @@
+// form.dart
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stage/screens/QuestionnairePage.dart';
 
+import 'ParentInfo.dart';
+
 class FormPage extends StatefulWidget {
   @override
-
   _FormPageState createState() => _FormPageState();
 }
 
@@ -27,31 +30,44 @@ class _FormPageState extends State<FormPage> {
   }
 
   void _submitForm() {
-  if (_formKey.currentState!.validate()) {
-    String firstName = _firstNameController.text;
-    String lastName = _lastNameController.text;
-    int age = int.tryParse(_ageController.text) ?? 0;
-    String gender = _getSelectedGender();
-    String parent = _getParentName();
+    if (_formKey.currentState!.validate()) {
+      String firstName = _firstNameController.text;
+      String lastName = _lastNameController.text;
+      int age = int.tryParse(_ageController.text) ?? 0;
+      String gender = _getSelectedGender();
+      String parent = _getParentName();
 
-    // Now you can use the collected data for further processing
-    // or pass it to the ConnersQuestionnairePage if needed
+      // Now you can use the collected data for further processing
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => QuestionnairePage(
-          firstName: firstName,
-          lastName: lastName,
-          age: age,
-          gender: gender,
-          parent: parent,
-        ),
-      ),
-    );
+      if (_isParentMother || _isParentFather) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ParentInfoPage(
+              showMotherFields: _isParentMother,
+              showFatherFields: _isParentFather,
+              parentName: parent,
+              title: 'Parent Information',
+            ),
+          ),
+        );
+      } else {
+        // Navigate to the next page without parent information
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuestionnairePage(
+              firstName: firstName,
+              lastName: lastName,
+              age: age,
+              gender: gender,
+              parent: parent,
+            ),
+          ),
+        );
+      }
+    }
   }
-}
-
 
   String _getSelectedGender() {
     if (_isMale) {
@@ -73,7 +89,7 @@ class _FormPageState extends State<FormPage> {
     return '';
   }
 
- void _onParentMotherChanged(bool? value) {
+  void _onParentMotherChanged(bool? value) {
     setState(() {
       _isParentMother = value ?? false;
     });
@@ -85,7 +101,7 @@ class _FormPageState extends State<FormPage> {
     });
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -144,6 +160,21 @@ class _FormPageState extends State<FormPage> {
                 },
               ),
               SizedBox(height: 8.0),
+              TextFormField(
+                controller: _ageController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Age',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your age';
+                  }
+                  return null;
+                },
+              ),
+              
+              SizedBox(height: 8.0),
               Row(
                 children: [
                   Checkbox(
@@ -173,14 +204,17 @@ class _FormPageState extends State<FormPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              SizedBox(height: 8.0),
-              Text(
-                'Who is responsible for the child:',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+              Container(
+                margin: EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  'Who is responsible for the child:',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
+              SizedBox(height: 8.0),
               Row(
                 children: [
                   Checkbox(
@@ -195,26 +229,12 @@ class _FormPageState extends State<FormPage> {
                   Text('Father'),
                 ],
               ),
-              SizedBox(height: 8.0),
-              TextFormField(
-                controller: _ageController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Age',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your age';
-                  }
-                  return null;
-                },
-              ),
               SizedBox(height: 32.0),
               Container(
                 margin: EdgeInsets.only(top: 16.0),
                 child: ElevatedButton(
                   onPressed: _submitForm,
-                  child: Text('Start Questionnaire'),
+                  child: Text('Next'),
                 ),
               ),
             ],
