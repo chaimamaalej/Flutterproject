@@ -24,8 +24,11 @@ class ParentInfoPage extends StatefulWidget {
 
 class _ParentInfoPageState extends State<ParentInfoPage> {
   bool _isMessageEnabled = false;
-
+  bool _isMailEnabled = false;
+  bool _isSMSEnabled = false;
   String parentName = '';
+  int? motherMobileNumber;
+  int? fatherMobileNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +70,6 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                       }
                       return null;
                     },
-                    onChanged: (value) {
-                      setState(() {
-                        parentName =
-                            value; // Update the parentName variable with the entered value
-                      });
-                    },
                   ),
                   SizedBox(height: 8.0),
                   TextFormField(
@@ -97,9 +94,10 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                       }
                       return null;
                     },
-                                    ),
+                  ),
                   SizedBox(height: 8.0),
                   TextFormField(
+                    keyboardType: TextInputType.number, // Set the keyboard type to number
                     decoration: InputDecoration(
                       labelText: 'Mobile Number',
                     ),
@@ -108,6 +106,11 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                         return 'Please enter the mother\'s mobile number';
                       }
                       return null;
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        motherMobileNumber = int.tryParse(value); // Parse the input as an integer
+                      });
                     },
                   ),
                   SizedBox(height: 16.0),
@@ -162,6 +165,7 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                   ),
                   SizedBox(height: 8.0),
                   TextFormField(
+                    keyboardType: TextInputType.number, // Set the keyboard type to number
                     decoration: InputDecoration(
                       labelText: 'Mobile Number',
                     ),
@@ -170,6 +174,11 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                         return 'Please enter the father\'s mobile number';
                       }
                       return null;
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        fatherMobileNumber = int.tryParse(value); // Parse the input as an integer
+                      });
                     },
                   ),
                   SizedBox(height: 16.0),
@@ -184,8 +193,44 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
               },
               title: Text(
                   'Do you want to be regularly informed by a message of the progress of your child?'),
-            ),
-            SizedBox(height: 32.0),
+            ),if (_isMessageEnabled) // Only show the following options if the message is enabled
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'How do you want to be informed?',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _isMailEnabled,
+                        onChanged: (value) {
+                          setState(() {
+                            _isMailEnabled = value ?? false;
+                          });
+                        },
+                      ),
+                      Text('Per Mail'),
+                      Checkbox(
+                        value: _isSMSEnabled,
+                        onChanged: (value) {
+                          setState(() {
+                            _isSMSEnabled = value ?? false;
+                          });
+                        },
+                      ),
+                      Text('Per SMS'),
+                    ],
+                  ),
+                  SizedBox(height: 16.0),
+                ],
+              ),
+            SizedBox(height: 26.0),
             ElevatedButton(
               onPressed: () {
                 // Implement the logic to save the parent information or navigate to the next page.
@@ -198,6 +243,8 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                       age: 0,
                       gender: '',
                       parent: parentName,
+                      motherMobileNumber: motherMobileNumber, // Pass the mother's mobile number as an integer
+                      fatherMobileNumber: fatherMobileNumber, // Pass the father's mobile number as an integer
                     ),
                   ),
                 );

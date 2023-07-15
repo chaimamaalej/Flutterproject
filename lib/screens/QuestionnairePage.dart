@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'dart:io';
 
 class QuestionnairePage extends StatefulWidget {
   final String firstName;
@@ -7,6 +9,8 @@ class QuestionnairePage extends StatefulWidget {
   final int age;
   final String gender;
   final String parent;
+  final int? motherMobileNumber; 
+  final int? fatherMobileNumber; 
 
   QuestionnairePage({
     required this.firstName,
@@ -14,6 +18,8 @@ class QuestionnairePage extends StatefulWidget {
     required this.age,
     required this.gender,
     required this.parent,
+    this.motherMobileNumber, 
+    this.fatherMobileNumber, 
   });
   @override
   _QuestionnairePageState createState() =>

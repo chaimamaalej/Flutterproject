@@ -1,5 +1,3 @@
-// form.dart
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stage/screens/QuestionnairePage.dart';
@@ -15,17 +13,18 @@ class _FormPageState extends State<FormPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
-  TextEditingController _ageController = TextEditingController();
+  int? _selectedAge;
   bool _isMale = false;
   bool _isFemale = false;
   bool _isParentMother = false;
   bool _isParentFather = false;
 
+  List<int> _ages = List<int>.generate(17, (index) => index + 2); // List of ages from 2 to 18
+
   @override
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _ageController.dispose();
     super.dispose();
   }
 
@@ -33,7 +32,7 @@ class _FormPageState extends State<FormPage> {
     if (_formKey.currentState!.validate()) {
       String firstName = _firstNameController.text;
       String lastName = _lastNameController.text;
-      int age = int.tryParse(_ageController.text) ?? 0;
+      int? age = _selectedAge;
       String gender = _getSelectedGender();
       String parent = _getParentName();
 
@@ -59,7 +58,7 @@ class _FormPageState extends State<FormPage> {
             builder: (context) => QuestionnairePage(
               firstName: firstName,
               lastName: lastName,
-              age: age,
+              age: age ?? 0,
               gender: gender,
               parent: parent,
             ),
@@ -126,7 +125,7 @@ class _FormPageState extends State<FormPage> {
               Container(
                 margin: EdgeInsets.only(bottom: 8.0),
                 child: Text(
-                  'The name of your child:',
+                  'The information of your child:',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -160,20 +159,40 @@ class _FormPageState extends State<FormPage> {
                 },
               ),
               SizedBox(height: 8.0),
-              TextFormField(
-                controller: _ageController,
-                keyboardType: TextInputType.number,
+              Container(
+                margin: EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  'The age of your child:',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 8.0),
+              DropdownButtonFormField<int>(
+                value: _selectedAge,
+                items: _ages.map((int age) {
+                  return DropdownMenuItem<int>(
+                    value: age,
+                    child: Text(age.toString()),
+                  );
+                }).toList(),
+                onChanged: (int? value) {
+                  setState(() {
+                    _selectedAge = value;
+                  });
+                },
                 decoration: InputDecoration(
                   labelText: 'Age',
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your age';
+                  if (value == null) {
+                    return 'Please select the age of your child';
                   }
                   return null;
                 },
               ),
-              
               SizedBox(height: 8.0),
               Row(
                 children: [
@@ -229,7 +248,7 @@ class _FormPageState extends State<FormPage> {
                   Text('Father'),
                 ],
               ),
-              SizedBox(height: 32.0),
+              SizedBox(height: 20.0),
               Container(
                 margin: EdgeInsets.only(top: 16.0),
                 child: ElevatedButton(
