@@ -144,7 +144,18 @@ class _FormPageState extends State<FormPage> {
       appBar: AppBar(
         title: Text('Form'),
       ),
-      body: Padding(
+      body: Stack(
+      children: [
+        // Background Image
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/form.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -315,7 +326,8 @@ class _FormPageState extends State<FormPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
+        ),
+      ],
+    ),
+  );
+}}

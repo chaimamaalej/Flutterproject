@@ -45,27 +45,43 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       appBar: AppBar(
         title: Text('Information About Your Child'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            _buildQuestion(1, 'Restless or fidgety'),
-            _buildQuestion(2, 'Impulsive'),
-            _buildQuestion(3, 'Does not finish tasks'),
-            _buildQuestion(4, 'Always on the go'),
-            _buildQuestion(5, 'Disturbs other children'),
-            _buildQuestion(6, 'Easily distracted'),
-            _buildQuestion(7, 'Demands must be met immediately, easily frustrated'),
-            _buildQuestion(8, 'Cries often and easily'),
-            _buildQuestion(9, 'Rapid and marked mood changes'),
-            _buildQuestion(10, 'Temper tantrums, explosive and unpredictable behavior'),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _finishQuestionnaire,
-              child: Text('Finish Registration'),
+      body: Stack(
+        children: [
+          // Background Image
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    'assets/images/form.jpg'), // Replace with your image path
+                fit: BoxFit.cover,
+              ),
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView(
+              children: [
+                _buildQuestion(1, 'Restless or fidgety'),
+                _buildQuestion(2, 'Impulsive'),
+                _buildQuestion(3, 'Does not finish tasks'),
+                _buildQuestion(4, 'Always on the go'),
+                _buildQuestion(5, 'Disturbs other children'),
+                _buildQuestion(6, 'Easily distracted'),
+                _buildQuestion(
+                    7, 'Demands must be met immediately, easily frustrated'),
+                _buildQuestion(8, 'Cries often and easily'),
+                _buildQuestion(9, 'Rapid and marked mood changes'),
+                _buildQuestion(10,
+                    'Temper tantrums, explosive and unpredictable behavior'),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: _finishQuestionnaire,
+                  child: Text('Finish Registration'),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -93,27 +109,26 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
   }
 
   Widget _buildResponseRadio(
-  int questionIndex, int responseIndex, String label) {
-  final response = responses[questionIndex] ?? -1;
-  final isSelected = response == responseIndex;
+      int questionIndex, int responseIndex, String label) {
+    final response = responses[questionIndex] ?? -1;
+    final isSelected = response == responseIndex;
 
-  return Padding(
-    padding: EdgeInsets.symmetric(vertical: 0.05),
-    child: RadioListTile<int>(
-      value: responseIndex,
-      groupValue: response,
-      onChanged: (value) => _handleResponse(questionIndex, value!),
-      title: Text(
-        label,
-        style: TextStyle(
-          fontSize: 13.0,
-          color: isSelected ? Colors.red : null,
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 0.05),
+      child: RadioListTile<int>(
+        value: responseIndex,
+        groupValue: response,
+        onChanged: (value) => _handleResponse(questionIndex, value!),
+        title: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13.0,
+            color: isSelected ? Colors.red : null,
+          ),
         ),
+        selectedTileColor: Colors.red,
+        activeColor: Colors.red,
       ),
-      selectedTileColor: Colors.red,
-      activeColor: Colors.red,
-    ),
-  );
-}
-
+    );
+  }
 }

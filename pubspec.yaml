@@ -74,3 +74,5 @@ flutter:
   assets:
     - assets/images/facebook.png
     - assets/images/background.jpeg
+    - assets/images/form.jpg
+    
