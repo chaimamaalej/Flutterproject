@@ -15,7 +15,7 @@ class ParentInfoPage extends StatefulWidget {
     required this.showMotherFields,
     required this.showFatherFields,
     required this.parentName,
-    required this.title,
+    required this.title, required TextEditingController firstNameController,
   });
 
   @override
@@ -29,7 +29,13 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
   String parentName = '';
   int? motherMobileNumber;
   int? fatherMobileNumber;
-
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +103,7 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                   ),
                   SizedBox(height: 8.0),
                   TextFormField(
-                    keyboardType: TextInputType.number, // Set the keyboard type to number
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'Mobile Number',
                     ),
@@ -109,7 +115,7 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                     },
                     onChanged: (value) {
                       setState(() {
-                        motherMobileNumber = int.tryParse(value); // Parse the input as an integer
+                        motherMobileNumber = int.tryParse(value); 
                       });
                     },
                   ),
@@ -165,7 +171,7 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                   ),
                   SizedBox(height: 8.0),
                   TextFormField(
-                    keyboardType: TextInputType.number, // Set the keyboard type to number
+                    keyboardType: TextInputType.number, 
                     decoration: InputDecoration(
                       labelText: 'Mobile Number',
                     ),
@@ -177,7 +183,7 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                     },
                     onChanged: (value) {
                       setState(() {
-                        fatherMobileNumber = int.tryParse(value); // Parse the input as an integer
+                        fatherMobileNumber = int.tryParse(value); 
                       });
                     },
                   ),
@@ -193,7 +199,7 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
               },
               title: Text(
                   'Do you want to be regularly informed by a message of the progress of your child?'),
-            ),if (_isMessageEnabled) // Only show the following options if the message is enabled
+            ),if (_isMessageEnabled) 
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -233,7 +239,6 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
             SizedBox(height: 26.0),
             ElevatedButton(
               onPressed: () {
-                // Implement the logic to save the parent information or navigate to the next page.
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -243,8 +248,8 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
                       age: 0,
                       gender: '',
                       parent: parentName,
-                      motherMobileNumber: motherMobileNumber, // Pass the mother's mobile number as an integer
-                      fatherMobileNumber: fatherMobileNumber, // Pass the father's mobile number as an integer
+                      motherMobileNumber: motherMobileNumber, 
+                      fatherMobileNumber: fatherMobileNumber, 
                     ),
                   ),
                 );

@@ -1,17 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:stage/screens/login_screen/components/bottom_text.dart';
 import 'package:stage/screens/login_screen/components/top_text.dart';
 import 'package:ionicons/ionicons.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/helper_functions.dart';
+import '../../role_selection.dart';
 import '../animations/change_screen_animations.dart';
 import '../../form.dart';
 import 'top_text.dart';
 import 'package:ionicons/ionicons.dart';
-
-
-
 
 enum Screens {
   createAccount,
@@ -27,10 +24,36 @@ class LoginContent extends StatefulWidget {
 
 class _LoginContentState extends State<LoginContent>
     with TickerProviderStateMixin {
+      final _formKey = GlobalKey<FormState>();
   late final List<Widget> createAccountContent;
   late final List<Widget> loginContent;
+   bool _hasFocus = false;
 
-  Widget inputField(String hint, IconData iconData) {
+String? validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your name';
+    }
+    return null; // Return null if the input is valid
+  }
+
+   String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your email address';
+    }
+    // Add additional email validation logic if needed
+    return null; // Return null if the input is valid
+  }
+
+ String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your password';
+    }
+    // Add additional password validation logic if needed
+    return null; // Return null if the input is valid
+  }
+ 
+
+  Widget inputField(String hint, IconData iconData, {required String? Function(String?) validator}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
       child: SizedBox(
@@ -40,7 +63,8 @@ class _LoginContentState extends State<LoginContent>
           shadowColor: Colors.black87,
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(30),
-          child: TextField(
+          child: TextFormField( // Use TextFormField
+            validator: validator, // Add the validator function
             textAlignVertical: TextAlignVertical.bottom,
             decoration: InputDecoration(
               border: OutlineInputBorder(
@@ -81,15 +105,16 @@ class _LoginContentState extends State<LoginContent>
     );
   }
 
- Widget formButton(String title) {
+  Widget formButton(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 115, vertical: 8),
       child: ElevatedButton(
         onPressed: () {
           Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FormPage()),
-        );},
+            context,
+            MaterialPageRoute(builder: (context) => RoleSelectionPage()),
+          );
+        },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: const StadiumBorder(),
@@ -107,8 +132,6 @@ class _LoginContentState extends State<LoginContent>
       ),
     );
   }
-
-
 
   Widget forgotPassword() {
     return Padding(
@@ -130,17 +153,18 @@ class _LoginContentState extends State<LoginContent>
   @override
   void initState() {
     createAccountContent = [
-      inputField('Name', Ionicons.person_outline),
-      inputField('Email', Ionicons.mail_outline),
-      inputField('Password', Ionicons.lock_closed_outline),
-      formButton('Fill In The Form'),
+      inputField('Name', Ionicons.person_outline, validator: validateName),
+      inputField('Email', Ionicons.mail_outline, validator: validateEmail),
+      inputField('Password', Ionicons.lock_closed_outline, validator: validatePassword),
+      formButton('Next'),
     ];
 
     loginContent = [
-      inputField('Email', Ionicons.mail_outline),
-      inputField('Password', Ionicons.lock_closed_outline),
+      inputField('Email', Ionicons.mail_outline, validator: validateEmail),
+      inputField('Password', Ionicons.lock_closed_outline, validator: validatePassword),
       loginButton('Log In'),
       forgotPassword(),
+
     ];
 
     ChangeScreenAnimation.initialize(
@@ -175,38 +199,55 @@ class _LoginContentState extends State<LoginContent>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        const Positioned(
-          top: 136,
-          left: 24,
-          child: TopText(),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 150),
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: createAccountContent,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: loginContent,
-              ),
-            ],
+    return GestureDetector(
+      onTap: () {
+        // Remove focus from text fields when tapping outside
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Stack(
+        children: [
+          const Positioned(
+            top: 136,
+            left: 24,
+            child: TopText(),
           ),
-        ),
-        const Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 50),
-            child: BottomText(),
+          Padding(
+            padding: const EdgeInsets.only(top: 280),
+            child: SingleChildScrollView(
+              child: Form( // Wrap the input fields with Form widget
+                key: _formKey,
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: createAccountContent,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: loginContent,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
-      ],
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 50),
+              child: AnimatedOpacity(
+                // Use AnimatedOpacity to handle the visibility of the "Already have an account? Log in" text
+                opacity: _hasFocus ? 0.0 : 1.0,
+                duration: const Duration(milliseconds: 300),
+                child: BottomText(),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
+    

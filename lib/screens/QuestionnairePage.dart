@@ -9,8 +9,8 @@ class QuestionnairePage extends StatefulWidget {
   final int age;
   final String gender;
   final String parent;
-  final int? motherMobileNumber; 
-  final int? fatherMobileNumber; 
+  final int? motherMobileNumber;
+  final int? fatherMobileNumber;
 
   QuestionnairePage({
     required this.firstName,
@@ -18,12 +18,12 @@ class QuestionnairePage extends StatefulWidget {
     required this.age,
     required this.gender,
     required this.parent,
-    this.motherMobileNumber, 
-    this.fatherMobileNumber, 
+    this.motherMobileNumber,
+    this.fatherMobileNumber,
   });
+
   @override
-  _QuestionnairePageState createState() =>
-      _QuestionnairePageState();
+  _QuestionnairePageState createState() => _QuestionnairePageState();
 }
 
 class _QuestionnairePageState extends State<QuestionnairePage> {
@@ -36,9 +36,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
   }
 
   void _finishQuestionnaire() {
-    // Process the responses and perQuestionnaire any required actions
     print(responses);
-    // Add your logic here to handle the Questionnaire submission
   }
 
   @override
@@ -81,12 +79,12 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8.0),
-        Row(
+        Column(
           children: [
-            _buildResponseButton(questionIndex, 0, 'Not at all'),
-            _buildResponseButton(questionIndex, 1, 'A little bit'),
-            _buildResponseButton(questionIndex, 2, 'Quite a bit'),
-            _buildResponseButton(questionIndex, 3, 'Very much'),
+            _buildResponseRadio(questionIndex, 0, 'Not at all'),
+            _buildResponseRadio(questionIndex, 1, 'A little bit'),
+            _buildResponseRadio(questionIndex, 2, 'Quite a bit'),
+            _buildResponseRadio(questionIndex, 3, 'Very much'),
           ],
         ),
         SizedBox(height: 16.0),
@@ -94,28 +92,28 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     );
   }
 
- Widget _buildResponseButton(
+  Widget _buildResponseRadio(
   int questionIndex, int responseIndex, String label) {
   final response = responses[questionIndex] ?? -1;
   final isSelected = response == responseIndex;
 
-  return Expanded(
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: ElevatedButton(
-        onPressed: () => _handleResponse(questionIndex, responseIndex),
-        style: ButtonStyle(
-          backgroundColor: isSelected
-              ? MaterialStateProperty.all<Color>(Colors.red)
-              : null,
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : null,
-          ),
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: 0.05),
+    child: RadioListTile<int>(
+      value: responseIndex,
+      groupValue: response,
+      onChanged: (value) => _handleResponse(questionIndex, value!),
+      title: Text(
+        label,
+        style: TextStyle(
+          fontSize: 13.0,
+          color: isSelected ? Colors.red : null,
         ),
       ),
+      selectedTileColor: Colors.red,
+      activeColor: Colors.red,
     ),
   );
-}}
+}
+
+}

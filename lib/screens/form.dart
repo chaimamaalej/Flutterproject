@@ -13,13 +13,15 @@ class _FormPageState extends State<FormPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
   int? _selectedAge;
   bool _isMale = false;
   bool _isFemale = false;
   bool _isParentMother = false;
   bool _isParentFather = false;
 
-  List<int> _ages = List<int>.generate(17, (index) => index + 2); // List of ages from 2 to 18
+  List<int> _ages = List<int>.generate(17, (index) => index + 2);
+  bool _formSubmitted = false;
 
   @override
   void dispose() {
@@ -28,15 +30,43 @@ class _FormPageState extends State<FormPage> {
     super.dispose();
   }
 
+  String? _validateFirstName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your first name';
+    }
+    return null;
+  }
+
+  String? _validateLastName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your last name';
+    }
+    return null;
+  }
+
+  String? _validateGender() {
+    if (!_isMale && !_isFemale) {
+      return 'Please select the gender of your child';
+    }
+    return null;
+  }
+
+  String? _validateParentResponsibility() {
+    if (!_isParentMother && !_isParentFather) {
+      return 'Please select who is responsible for the child';
+    }
+    return null;
+  }
+
   void _submitForm() {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() &&
+        _isGenderSelected() &&
+        _isParentResponsibilitySelected()) {
       String firstName = _firstNameController.text;
       String lastName = _lastNameController.text;
       int? age = _selectedAge;
       String gender = _getSelectedGender();
       String parent = _getParentName();
-
-      // Now you can use the collected data for further processing
 
       if (_isParentMother || _isParentFather) {
         Navigator.push(
@@ -47,11 +77,11 @@ class _FormPageState extends State<FormPage> {
               showFatherFields: _isParentFather,
               parentName: parent,
               title: 'Parent Information',
+              firstNameController: _firstNameController,
             ),
           ),
         );
       } else {
-        // Navigate to the next page without parent information
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -66,6 +96,14 @@ class _FormPageState extends State<FormPage> {
         );
       }
     }
+  }
+
+  bool _isGenderSelected() {
+    return _isMale || _isFemale;
+  }
+
+  bool _isParentResponsibilitySelected() {
+    return _isParentMother || _isParentFather;
   }
 
   String _getSelectedGender() {
@@ -138,12 +176,7 @@ class _FormPageState extends State<FormPage> {
                 decoration: InputDecoration(
                   labelText: 'First Name',
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your first name';
-                  }
-                  return null;
-                },
+                validator: _validateFirstName,
               ),
               SizedBox(height: 6.0),
               TextFormField(
@@ -151,12 +184,7 @@ class _FormPageState extends State<FormPage> {
                 decoration: InputDecoration(
                   labelText: 'Last Name',
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your last name';
-                  }
-                  return null;
-                },
+                validator: _validateLastName,
               ),
               SizedBox(height: 8.0),
               Container(
@@ -222,6 +250,17 @@ class _FormPageState extends State<FormPage> {
                   Text('Female'),
                 ],
               ),
+              if (_formSubmitted && !_isGenderSelected())
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    'Please select the gender of your child',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ),
               SizedBox(height: 8.0),
               Container(
                 margin: EdgeInsets.only(bottom: 8.0),
@@ -248,11 +287,28 @@ class _FormPageState extends State<FormPage> {
                   Text('Father'),
                 ],
               ),
+              if (_formSubmitted && !_isParentMother && !_isParentFather)
+
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    'Please select who is responsible for the child',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ),
               SizedBox(height: 20.0),
               Container(
                 margin: EdgeInsets.only(top: 16.0),
                 child: ElevatedButton(
-                  onPressed: _submitForm,
+                  onPressed: () {
+                    setState(() {
+                      _formSubmitted = true;
+                    });
+                    _submitForm();
+                  },
                   child: Text('Next'),
                 ),
               ),
