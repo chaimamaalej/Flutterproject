@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stage/screens/form.dart';
 
+import 'form_doctor.dart';
+
 class RoleSelectionPage extends StatelessWidget {
   void _showInformation(BuildContext context, String message) {
     // Show a dialog or a bottom sheet with the desired information
@@ -49,9 +51,12 @@ class RoleSelectionPage extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 32.0),
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/medecin');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => FormDoctorPage()),
+                          );
                         },
-                        child: Text('Medecin'),
+                        child: Text('Doctor'),
                       ),
                     ),
                     IconButton(
@@ -60,7 +65,7 @@ class RoleSelectionPage extends StatelessWidget {
                         'Supervise the progress of the children and provide medical care as needed.',
                       ),
                       icon: Icon(Icons.info, color: Colors.white),
-                      tooltip: 'Medecin Information',
+                      tooltip: 'Doctor Information',
                     ),
                   ],
                 ),
@@ -77,7 +82,7 @@ class RoleSelectionPage extends StatelessWidget {
                             MaterialPageRoute(builder: (context) => FormPage()),
                           );
                         },
-                        child: Text('  Parent  '),
+                        child: Text('Parent'),
                       ),
                     ),
                     IconButton(
