@@ -12,7 +12,7 @@ class CenterWidget extends StatelessWidget {
     Key? key,
     required this.size,
   }) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     final width = size.width;
@@ -80,14 +80,13 @@ class CenterWidget extends StatelessWidget {
                   colors: [
                     Color(0x803DE896),
                     Color(0x4D76E3AE),
-                
-                  ],),
+                  ],
                 ),
               ),
-        ),
+            ),
+          ),
         ),
       ],
     );
   }
-  }
-  
+}
