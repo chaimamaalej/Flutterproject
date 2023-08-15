@@ -1,5 +1,4 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:stage/screens/login_screen/components/bottom_text.dart';
 import 'package:stage/screens/login_screen/components/top_text.dart';
@@ -26,28 +25,22 @@ class LoginContent extends StatefulWidget {
 
 class _LoginContentState extends State<LoginContent>
     with TickerProviderStateMixin {
-  final _formKey = GlobalKey<FormState>();
+      final _formKey = GlobalKey<FormState>();
   late final List<Widget> createAccountContent;
   late final List<Widget> loginContent;
-  final TextEditingController _nameController = TextEditingController();
+   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _hasFocus = false;
+   bool _hasFocus = false;
 
-  void signUserIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim());
-  }
-
-  String? validateName(String? value) {
+String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your name';
     }
     return null; // Return null if the input is valid
   }
 
-  String? validateEmail(String? value) {
+   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your email address';
     }
@@ -55,16 +48,16 @@ class _LoginContentState extends State<LoginContent>
     return null; // Return null if the input is valid
   }
 
-  String? validatePassword(String? value) {
+ String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
     }
     // Add additional password validation logic if needed
     return null; // Return null if the input is valid
   }
+ 
 
-  Widget inputField(String hint, IconData iconData,
-      {required String? Function(String?) validator}) {
+  Widget inputField(String hint, IconData iconData, {required String? Function(String?) validator}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
       child: SizedBox(
@@ -74,8 +67,7 @@ class _LoginContentState extends State<LoginContent>
           shadowColor: Colors.black87,
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(30),
-          child: TextFormField(
-            // Use TextFormField
+          child: TextFormField( // Use TextFormField
             validator: validator, // Add the validator function
             textAlignVertical: TextAlignVertical.bottom,
             decoration: InputDecoration(
@@ -98,9 +90,7 @@ class _LoginContentState extends State<LoginContent>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 135, vertical: 16),
       child: ElevatedButton(
-        onPressed: () {
-          signUserIn();
-        },
+        onPressed: () {},
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: const StadiumBorder(),
@@ -169,17 +159,16 @@ class _LoginContentState extends State<LoginContent>
     createAccountContent = [
       inputField('Name', Ionicons.person_outline, validator: validateName),
       inputField('Email', Ionicons.mail_outline, validator: validateEmail),
-      inputField('Password', Ionicons.lock_closed_outline,
-          validator: validatePassword),
+      inputField('Password', Ionicons.lock_closed_outline, validator: validatePassword),
       formButton('Next'),
     ];
 
     loginContent = [
       inputField('Email', Ionicons.mail_outline, validator: validateEmail),
-      inputField('Password', Ionicons.lock_closed_outline,
-          validator: validatePassword),
+      inputField('Password', Ionicons.lock_closed_outline, validator: validatePassword),
       loginButton('Log In'),
       forgotPassword(),
+
     ];
 
     ChangeScreenAnimation.initialize(
@@ -212,36 +201,35 @@ class _LoginContentState extends State<LoginContent>
     super.dispose();
   }
 
-  void saveUserData(String name, String email, String password) async {
-    // Get a reference to the "users" collection in Firestore
-    /* CollectionReference */ var usersCollection = null;
+void saveUserData(String name, String email, String password) async {
+  // Get a reference to the "users" collection in Firestore
+  CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
 
-    try {
-      // Save user data as a new document with the email as the document ID
-      await usersCollection.doc(email).set({
-        'name': name,
-        'email': email,
-        'password': password,
-      });
+  try {
+    // Save user data as a new document with the email as the document ID
+    await usersCollection.doc(email).set({
+      'name': name,
+      'email': email,
+      'password': password,
+    });
 
-      // Data saved successfully
-      print('User data saved to Firestore');
-    } catch (e) {
-      // An error occurred while saving data
-      print('Error saving user data: $e');
-    }
+    // Data saved successfully
+    print('User data saved to Firestore');
+  } catch (e) {
+    // An error occurred while saving data
+    print('Error saving user data: $e');
   }
+}
+ // Example usage in your login or registration function
+void onRegisterButtonPressed() {
+  // Get the name, email, and password from the text fields
+  String name = _nameController.text;
+  String email = _emailController.text;
+  String password = _passwordController.text;
 
-  // Example usage in your login or registration function
-  void onRegisterButtonPressed() {
-    // Get the name, email, and password from the text fields
-    String name = _nameController.text;
-    String email = _emailController.text;
-    String password = _passwordController.text;
-
-    // Call the function to save user data to Firebase
-    saveUserData(name, email, password);
-  }
+  // Call the function to save user data to Firebase
+  saveUserData(name, email, password);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -260,8 +248,7 @@ class _LoginContentState extends State<LoginContent>
           Padding(
             padding: const EdgeInsets.only(top: 280),
             child: SingleChildScrollView(
-              child: Form(
-                // Wrap the input fields with Form widget
+              child: Form( // Wrap the input fields with Form widget
                 key: _formKey,
                 child: Stack(
                   children: [
@@ -297,3 +284,4 @@ class _LoginContentState extends State<LoginContent>
     );
   }
 }
+    

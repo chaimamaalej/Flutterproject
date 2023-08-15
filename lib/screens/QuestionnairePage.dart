@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'dart:io';
+import 'package:sqflite/sqflite.dart';
+import 'dart:io';
 
 class QuestionnairePage extends StatefulWidget {
   final String firstName;
@@ -48,7 +49,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
         children: [
           // Background Image
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
                     'assets/images/form.jpg'), // Replace with your image path
@@ -72,10 +73,10 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                 _buildQuestion(9, 'Rapid and marked mood changes'),
                 _buildQuestion(10,
                     'Temper tantrums, explosive and unpredictable behavior'),
-                const SizedBox(height: 16.0),
+                SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: _finishQuestionnaire,
-                  child: const Text('Finish Registration'),
+                  child: Text('Finish Registration'),
                 ),
               ],
             ),
@@ -91,9 +92,9 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       children: [
         Text(
           '$questionIndex. $question',
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 8.0),
+        SizedBox(height: 8.0),
         Column(
           children: [
             _buildResponseRadio(questionIndex, 0, 'Not at all'),
@@ -102,7 +103,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
             _buildResponseRadio(questionIndex, 3, 'Very much'),
           ],
         ),
-        const SizedBox(height: 16.0),
+        SizedBox(height: 16.0),
       ],
     );
   }
