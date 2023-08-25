@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:stage/screens/login_screen/components/bottom_text.dart';
 import 'package:stage/screens/login_screen/components/top_text.dart';
@@ -201,25 +200,7 @@ String? validateName(String? value) {
     super.dispose();
   }
 
-void saveUserData(String name, String email, String password) async {
-  // Get a reference to the "users" collection in Firestore
-  CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
 
-  try {
-    // Save user data as a new document with the email as the document ID
-    await usersCollection.doc(email).set({
-      'name': name,
-      'email': email,
-      'password': password,
-    });
-
-    // Data saved successfully
-    print('User data saved to Firestore');
-  } catch (e) {
-    // An error occurred while saving data
-    print('Error saving user data: $e');
-  }
-}
  // Example usage in your login or registration function
 void onRegisterButtonPressed() {
   // Get the name, email, and password from the text fields
@@ -227,8 +208,6 @@ void onRegisterButtonPressed() {
   String email = _emailController.text;
   String password = _passwordController.text;
 
-  // Call the function to save user data to Firebase
-  saveUserData(name, email, password);
 }
 
   @override
