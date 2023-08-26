@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:stage/screens/login_screen/login_screen.dart';
+import 'package:stage/screens/home_page.dart';
 import 'package:stage/utils/constants.dart';
 import 'utils/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,7 +19,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
-  firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,16 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Montserrat',
             ),
       ),
-      home: const LoginScreen(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return HomePage();
+          } else {
+            return LoginScreen();
+          }
+        },
+      ),
     );
   }
 }

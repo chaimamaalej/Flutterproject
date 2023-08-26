@@ -113,7 +113,7 @@ class _LoginContentState extends State<LoginContent>
   }
 
   Future signIn() async {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
     );
