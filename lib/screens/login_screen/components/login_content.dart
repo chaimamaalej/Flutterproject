@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stage/screens/login_screen/components/bottom_text.dart';
 import 'package:stage/screens/login_screen/components/top_text.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/helper_functions.dart';
 import '../../role_selection.dart';
@@ -24,22 +25,22 @@ class LoginContent extends StatefulWidget {
 
 class _LoginContentState extends State<LoginContent>
     with TickerProviderStateMixin {
-      final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   late final List<Widget> createAccountContent;
   late final List<Widget> loginContent;
-   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-   bool _hasFocus = false;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool _hasFocus = false;
 
-String? validateName(String? value) {
+  String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your name';
     }
     return null; // Return null if the input is valid
   }
 
-   String? validateEmail(String? value) {
+  String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your email address';
     }
@@ -47,16 +48,17 @@ String? validateName(String? value) {
     return null; // Return null if the input is valid
   }
 
- String? validatePassword(String? value) {
+  String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
     }
     // Add additional password validation logic if needed
     return null; // Return null if the input is valid
   }
- 
 
-  Widget inputField(String hint, IconData iconData, {required String? Function(String?) validator}) {
+  Widget inputField(
+      String hint, IconData iconData, TextEditingController controller,
+      {required String? Function(String?) validator}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
       child: SizedBox(
@@ -66,7 +68,9 @@ String? validateName(String? value) {
           shadowColor: Colors.black87,
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(30),
-          child: TextFormField( // Use TextFormField
+          child: TextFormField(
+            // Use TextFormField
+            controller: controller,
             validator: validator, // Add the validator function
             textAlignVertical: TextAlignVertical.bottom,
             decoration: InputDecoration(
@@ -89,7 +93,7 @@ String? validateName(String? value) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 135, vertical: 16),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: signIn,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: const StadiumBorder(),
@@ -105,6 +109,13 @@ String? validateName(String? value) {
           ),
         ),
       ),
+    );
+  }
+
+  Future signIn() async {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
     );
   }
 
@@ -156,18 +167,22 @@ String? validateName(String? value) {
   @override
   void initState() {
     createAccountContent = [
-      inputField('Name', Ionicons.person_outline, validator: validateName),
-      inputField('Email', Ionicons.mail_outline, validator: validateEmail),
-      inputField('Password', Ionicons.lock_closed_outline, validator: validatePassword),
+      inputField('Name', Ionicons.person_outline, nameController,
+          validator: validateName),
+      inputField('Email', Ionicons.mail_outline, emailController,
+          validator: validateEmail),
+      inputField('Password', Ionicons.lock_closed_outline, passwordController,
+          validator: validatePassword),
       formButton('Next'),
     ];
 
     loginContent = [
-      inputField('Email', Ionicons.mail_outline, validator: validateEmail),
-      inputField('Password', Ionicons.lock_closed_outline, validator: validatePassword),
+      inputField('Email', Ionicons.mail_outline, emailController,
+          validator: validateEmail),
+      inputField('Password', Ionicons.lock_closed_outline, passwordController,
+          validator: validatePassword),
       loginButton('Log In'),
       forgotPassword(),
-
     ];
 
     ChangeScreenAnimation.initialize(
@@ -200,15 +215,13 @@ String? validateName(String? value) {
     super.dispose();
   }
 
-
- // Example usage in your login or registration function
-void onRegisterButtonPressed() {
-  // Get the name, email, and password from the text fields
-  String name = _nameController.text;
-  String email = _emailController.text;
-  String password = _passwordController.text;
-
-}
+  // Example usage in your login or registration function
+  void onRegisterButtonPressed() {
+    // Get the name, email, and password from the text fields
+    String name = nameController.text;
+    String email = emailController.text;
+    String password = passwordController.text;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +240,8 @@ void onRegisterButtonPressed() {
           Padding(
             padding: const EdgeInsets.only(top: 280),
             child: SingleChildScrollView(
-              child: Form( // Wrap the input fields with Form widget
+              child: Form(
+                // Wrap the input fields with Form widget
                 key: _formKey,
                 child: Stack(
                   children: [
@@ -263,4 +277,3 @@ void onRegisterButtonPressed() {
     );
   }
 }
-    
