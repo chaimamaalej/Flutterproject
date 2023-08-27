@@ -1,339 +1,293 @@
+// ParentInfoPage.dart
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stage/screens/QuestionnairePage.dart';
 
-import 'ParentInfo.dart';
+import 'QuestionnairePage.dart';
 
-class FormParentPage extends StatefulWidget {
-
+class ParentInfoPage extends StatefulWidget {
+  final bool showMotherFields;
+  final bool showFatherFields;
+  final String parentRole;
+  final String title;
   final String username;
   final String email;
   final String password;
-  FormParentPage({required this.username ,required this.email, required this.password});
+  final String childFirstName;
+  final String childLastName;
+  final int? childAge;
+
+  ParentInfoPage({
+    required this.showMotherFields,
+    required this.showFatherFields,
+    required this.parentRole,
+    required this.title,
+    required this.childFirstName,
+    required this.childLastName,
+    required this.childAge,
+    required this.username,
+    required this.email,
+    required this.password,
+  });
 
   @override
-  _FormParentPageState createState() => _FormParentPageState();
+  _ParentInfoPageState createState() => _ParentInfoPageState();
 }
 
-class _FormParentPageState extends State<FormParentPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _firstNameController = TextEditingController();
-  TextEditingController _lastNameController = TextEditingController();
-  TextEditingController _ageController = TextEditingController();
-  int? _selectedAge;
-  bool _isMale = false;
-  bool _isFemale = false;
-  bool _isParentMother = false;
-  bool _isParentFather = false;
+class _ParentInfoPageState extends State<ParentInfoPage> {
+  bool _isMessageEnabled = false;
+  bool _isMailEnabled = false;
+  bool _isSMSEnabled = false;
+  int? motherMobileNumber;
+  int? fatherMobileNumber;
+  final TextEditingController _parentFirstNameController =
+      TextEditingController();
+  final TextEditingController _parentLastNameController =
+      TextEditingController();
+  final TextEditingController _mobileNumberController =
+      TextEditingController();
 
-  List<int> _ages = List<int>.generate(17, (index) => index + 2);
-  bool _formSubmitted = false;
+  String username = '';
+  String email = '';
+  String password = '';
+  String childFirstName = '';
+  String childLastName = '';
+  int? childAge;
+  String parentRole = '';
 
   @override
-  void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    super.dispose();
-  }
-
-  String? _validateFirstName(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your first name';
-    }
-    return null;
-  }
-
-  String? _validateLastName(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your last name';
-    }
-    return null;
-  }
-
-  String? _validateGender() {
-    if (!_isMale && !_isFemale) {
-      return 'Please select the gender of your child';
-    }
-    return null;
-  }
-
-  String? _validateParentResponsibility() {
-    if (!_isParentMother && !_isParentFather) {
-      return 'Please select who is responsible for the child';
-    }
-    return null;
-  }
-
-  void _submitForm() {
-    if (_formKey.currentState!.validate() &&
-        _isGenderSelected() &&
-        _isParentResponsibilitySelected()) {
-      String firstName = _firstNameController.text;
-      String lastName = _lastNameController.text;
-      int? age = _selectedAge;
-      String gender = _getSelectedGender();
-      String parent = _getParentName();
-
-      if (_isParentMother || _isParentFather) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ParentInfoPage(
-              showMotherFields: _isParentMother,
-              showFatherFields: _isParentFather,
-              parentName: parent,
-              title: 'Parent Information',
-              firstNameController: _firstNameController,
-            ),
-          ),
-        );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuestionnairePage(
-              firstName: firstName,
-              lastName: lastName,
-              age: age ?? 0,
-              gender: gender,
-              parent: parent,
-            ),
-          ),
-        );
-      }
-    }
-  }
-
-  bool _isGenderSelected() {
-    return _isMale || _isFemale;
-  }
-
-  bool _isParentResponsibilitySelected() {
-    return _isParentMother || _isParentFather;
-  }
-
-  String _getSelectedGender() {
-    if (_isMale) {
-      return 'Male';
-    } else if (_isFemale) {
-      return 'Female';
-    }
-    return '';
-  }
-
-  String _getParentName() {
-    if (_isParentMother && _isParentFather) {
-      return 'Both Parents';
-    } else if (_isParentMother) {
-      return 'Mother';
-    } else if (_isParentFather) {
-      return 'Father';
-    }
-    return '';
-  }
-
-  void _onParentMotherChanged(bool? value) {
-    setState(() {
-      _isParentMother = value ?? false;
-    });
-  }
-
-  void _onParentFatherChanged(bool? value) {
-    setState(() {
-      _isParentFather = value ?? false;
-    });
+  void initState() {
+    super.initState();
+    username = widget.username;
+    email = widget.email;
+    password = widget.password;
+    childFirstName = widget.childFirstName;
+    childLastName = widget.childLastName;
+    childAge = widget.childAge;
+    parentRole = widget.parentRole;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Form'),
+        title: Text(widget.title),
       ),
       body: Stack(
-      children: [
-        // Background Image
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/form.jpg'),
-              fit: BoxFit.cover,
+        children: [
+          // Background Image
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    'assets/images/form.jpg'), // Replace with your image path
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-        ),
-      Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 16.0),
-                child: Text(
-                  'To generate perfect and suitable games for your child, you have to fill in this questionnaire:',
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView(
+              children: [
+                Text(
+                  'Parent Information',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'The information of your child:',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                SizedBox(height: 16.0),
+                if (widget.showMotherFields)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Mother Information',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'First Name of the Mother',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the first name of the mother';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 8.0),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Last Name of the Mother',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the last name of the mother';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 8.0),
+                      TextFormField(
+                        controller: _mobileNumberController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Mobile Number',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the mother\'s mobile number';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            motherMobileNumber = int.tryParse(value);
+                          });
+                        },
+                      ),
+                      SizedBox(height: 16.0),
+                    ],
                   ),
-                ),
-              ),
-              SizedBox(height: 6.0),
-              TextFormField(
-                controller: _firstNameController,
-                decoration: InputDecoration(
-                  labelText: 'First Name',
-                ),
-                validator: _validateFirstName,
-              ),
-              SizedBox(height: 6.0),
-              TextFormField(
-                controller: _lastNameController,
-                decoration: InputDecoration(
-                  labelText: 'Last Name',
-                ),
-                validator: _validateLastName,
-              ),
-              SizedBox(height: 8.0),
-              Container(
-                margin: EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'The age of your child:',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                if (widget.showFatherFields)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Father Information',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'First Name of the Father',
+                        ),
+                        controller: _parentFirstNameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the first name of the father';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 8.0),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Last Name of the Father',
+                        ),
+                        controller: _parentLastNameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the last name of the father';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 8.0),
+                      TextFormField(
+                        controller: _mobileNumberController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Mobile Number',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the father\'s mobile number';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            fatherMobileNumber = int.tryParse(value);
+                          });
+                        },
+                      ),
+                      SizedBox(height: 16.0),
+                    ],
                   ),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              DropdownButtonFormField<int>(
-                value: _selectedAge,
-                items: _ages.map((int age) {
-                  return DropdownMenuItem<int>(
-                    value: age,
-                    child: Text(age.toString()),
-                  );
-                }).toList(),
-                onChanged: (int? value) {
-                  setState(() {
-                    _selectedAge = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Age',
-                ),
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please select the age of your child';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 8.0),
-              Row(
-                children: [
-                  Checkbox(
-                    value: _isMale,
-                    onChanged: (value) {
-                      setState(() {
-                        _isMale = value!;
-                        if (_isMale) {
-                          _isFemale = false;
-                        }
-                      });
-                    },
-                  ),
-                  Text('Male'),
-                  Checkbox(
-                    value: _isFemale,
-                    onChanged: (value) {
-                      setState(() {
-                        _isFemale = value!;
-                        if (_isFemale) {
-                          _isMale = false;
-                        }
-                      });
-                    },
-                  ),
-                  Text('Female'),
-                ],
-              ),
-              if (_formSubmitted && !_isGenderSelected())
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(
-                    'Please select the gender of your child',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 12.0,
-                    ),
-                  ),
-                ),
-              SizedBox(height: 8.0),
-              Container(
-                margin: EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Who is responsible for the child:',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Row(
-                children: [
-                  Checkbox(
-                    value: _isParentMother,
-                    onChanged: _onParentMotherChanged,
-                  ),
-                  Text('Mother'),
-                  Checkbox(
-                    value: _isParentFather,
-                    onChanged: _onParentFatherChanged,
-                  ),
-                  Text('Father'),
-                ],
-              ),
-              if (_formSubmitted && !_isParentMother && !_isParentFather)
-
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(
-                    'Please select who is responsible for the child',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 12.0,
-                    ),
-                  ),
-                ),
-              SizedBox(height: 20.0),
-              Container(
-                margin: EdgeInsets.only(top: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
+                CheckboxListTile(
+                  value: _isMessageEnabled,
+                  onChanged: (value) {
                     setState(() {
-                      _formSubmitted = true;
+                      _isMessageEnabled = value ?? false;
                     });
-                    _submitForm();
                   },
-                  child: Text('Next'),
+                  title: Text(
+                      'Do you want to be regularly informed by a message of the progress of your child?'),
                 ),
-              ),
-            ],
+                if (_isMessageEnabled)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'How do you want to be informed?',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _isMailEnabled,
+                            onChanged: (value) {
+                              setState(() {
+                                _isMailEnabled = value ?? false;
+                              });
+                            },
+                          ),
+                          Text('Per Mail'),
+                          Checkbox(
+                            value: _isSMSEnabled,
+                            onChanged: (value) {
+                              setState(() {
+                                _isSMSEnabled = value ?? false;
+                              });
+                            },
+                          ),
+                          Text('Per SMS'),
+                        ],
+                      ),
+                      SizedBox(height: 16.0),
+                    ],
+                  ),
+                SizedBox(height: 26.0),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QuestionnairePage(
+                          firstName: _parentFirstNameController.text,
+                          lastName: _parentLastNameController.text,
+                          childFirstName: childFirstName,
+                          childLastName: childLastName,
+                          childAge: childAge,
+                          parentRole: parentRole,
+                          username: username,
+                          email: email,
+                          password: password,
+                          mobileNumber: _mobileNumberController.text,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Start Questionnaire'),
+                ),
+              ],
+            ),
           ),
-        ),
-        ),
-      ],
-    ),
-  );
-}}
+        ],
+      ),
+    );
+  }
+}

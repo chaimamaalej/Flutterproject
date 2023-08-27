@@ -8,20 +8,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 class QuestionnairePage extends StatefulWidget {
   final String firstName;
   final String lastName;
-  final int age;
-  final String gender;
-  final String parent;
-  final int? motherMobileNumber;
-  final int? fatherMobileNumber;
+  final int? childAge;
+  final String parentRole;
+  final String mobileNumber;
+  final String username;
+  final String email;
+  final String password;
+  final String childFirstName;
+  final String childLastName;
 
   QuestionnairePage({
     required this.firstName,
     required this.lastName,
-    required this.age,
-    required this.gender,
-    required this.parent,
-    this.motherMobileNumber,
-    this.fatherMobileNumber,
+    required this.childAge,
+    required this.childFirstName,
+    required this.childLastName,
+    required this.parentRole,
+    required this.mobileNumber,
+    required this.username,
+    required this.email,
+    required this.password,
   });
 
   @override
@@ -37,16 +43,73 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     });
   }
 
-  void _finishQuestionnaire() {
-    // FirebaseAuth.instance.createUserWithEmailAndPassword(
-    //   email: "",
-    //   password: "",
-    // );
+  String username = '';
+  String email = '';
+  String password = '';
+  String firstName = '';
+  String lastName = '';
+  int? age;
+  String parentRole = '';
+  String mobileNumber = '';
+  String childFirstName = '';
+  String childLastName = '';
 
-    // users
-    //     .add({'username': 'chaima'})
-    //     .then((value) => print(""))
-    //     .catchError((error) => print("$error"));
+  @override
+  void initState() {
+    super.initState();
+    username = widget.username;
+    email = widget.email;
+    password = widget.password;
+    firstName = widget.firstName;
+    lastName = widget.lastName;
+    parentRole = widget.parentRole;
+    mobileNumber = widget.mobileNumber;
+    age = widget.childAge;
+    childFirstName = widget.childFirstName;
+    childLastName = widget.childLastName;
+  }
+
+  void _finishQuestionnaire() async {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    await users
+        .add({
+          'role': 'parent',
+          'username': username,
+          'email': email,
+          'firstName': firstName,
+          'lastName': lastName,
+          'age': age,
+          'parentRole': parentRole,
+          'mobileNumber': mobileNumber,
+          'childFirstName': childFirstName,
+          'childLastName': childLastName,
+        })
+        .then((value) => print("User created"))
+        .catchError((error) => print("$error"));
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Successfuly registered'),
+          content: Text('Please return to the login page'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the popup
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

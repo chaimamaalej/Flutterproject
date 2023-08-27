@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stage/screens/form_parent.dart';
+import 'package:stage/screens/form_child.dart';
 
 import 'form_doctor.dart';
 

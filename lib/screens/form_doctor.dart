@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stage/screens/home_page.dart';
 import 'package:stage/screens/login_screen/login_screen.dart';
-import 'ParentInfo.dart';
+import 'form_parent.dart';
 import 'package:stage/screens/home_page.dart';
 import 'dart:io';
 
@@ -33,7 +33,7 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
   TextEditingController _currentPositionController = TextEditingController();
   TextEditingController _medicalSchoolController = TextEditingController();
   TextEditingController _praxisAddressController = TextEditingController();
-  
+
   bool _isMale = false;
   bool _isFemale = false;
   bool _formSubmitted = false;
@@ -49,7 +49,6 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
     email = widget.email;
     password = widget.password;
   }
-
 
   final ImagePicker picker = ImagePicker();
 
@@ -93,7 +92,7 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
     return null;
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate() && _isSexSelected()) {
       // Form is valid, process the data or save to the database
       String firstName = _firstNameController.text;
@@ -105,14 +104,14 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
       String medicalSchool = _medicalSchoolController.text;
       String praxisAddress = _praxisAddressController.text;
 
-      FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-      users
+      await users
           .add({
             'role': 'doctor',
             'firstName': firstName,
@@ -129,11 +128,22 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
           .then((value) => print("User created"))
           .catchError((error) => print("$error"));
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Successfuly registered'),
+            content: Text('Please return to the login page'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the popup
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
       );
     }
   }
