@@ -4,6 +4,12 @@ import 'package:stage/screens/form.dart';
 import 'form_doctor.dart';
 
 class RoleSelectionPage extends StatelessWidget {
+  final String username;
+  final String email;
+  final String password;
+
+  RoleSelectionPage({required this.username ,required this.email, required this.password});
+
   void _showInformation(BuildContext context, String message) {
     // Show a dialog or a bottom sheet with the desired information
     showDialog(
@@ -53,7 +59,11 @@ class RoleSelectionPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => FormDoctorPage()),
+                            MaterialPageRoute(builder: (context) => FormDoctorPage(
+                              username: this.username,
+                              email: this.email,
+                              password: this.password,
+                            )),
                           );
                         },
                         child: Text('Doctor'),
@@ -79,7 +89,11 @@ class RoleSelectionPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => FormPage()),
+                            MaterialPageRoute(builder: (context) => FormPage(
+                              username: this.username,
+                              email: this.email,
+                              password: this.password,
+                            )),
                           );
                         },
                         child: Text('Parent'),

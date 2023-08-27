@@ -5,6 +5,12 @@ import 'package:stage/screens/QuestionnairePage.dart';
 import 'ParentInfo.dart';
 
 class FormPage extends StatefulWidget {
+
+  final String username;
+  final String email;
+  final String password;
+  FormPage({required this.username ,required this.email, required this.password});
+
   @override
   _FormPageState createState() => _FormPageState();
 }

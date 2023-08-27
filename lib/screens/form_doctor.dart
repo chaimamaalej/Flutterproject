@@ -2,11 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stage/screens/QuestionnairePage.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:stage/screens/home_page.dart';
+import 'package:stage/screens/login_screen/login_screen.dart';
 import 'ParentInfo.dart';
+import 'package:stage/screens/home_page.dart';
 import 'dart:io';
 
 class FormDoctorPage extends StatefulWidget {
+  final String username;
+  final String email;
+  final String password;
+  FormDoctorPage(
+      {required this.username, required this.email, required this.password});
+
   @override
   _FormDoctorPageState createState() => _FormDoctorPageState();
 }
@@ -20,29 +30,41 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
   TextEditingController _birthdayController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _faxController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
   TextEditingController _currentPositionController = TextEditingController();
   TextEditingController _medicalSchoolController = TextEditingController();
   TextEditingController _praxisAddressController = TextEditingController();
-
+  
   bool _isMale = false;
   bool _isFemale = false;
   bool _formSubmitted = false;
 
+  String username = '';
+  String email = '';
+  String password = '';
+
+  @override
+  void initState() {
+    super.initState();
+    username = widget.username;
+    email = widget.email;
+    password = widget.password;
+  }
+
+
   final ImagePicker picker = ImagePicker();
 
   Future getImage(ImageSource media) async {
-  var img;
-  try {
-    img = await picker.pickImage(source: media);
-  } catch (e) {
-    print(e);
-  }
+    var img;
+    try {
+      img = await picker.pickImage(source: media);
+    } catch (e) {
+      print(e);
+    }
 
-  setState(() {
-    image = img;
-  });
-}
+    setState(() {
+      image = img;
+    });
+  }
 
   @override
   void dispose() {
@@ -51,7 +73,6 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
     _addressController.dispose();
     _phoneNumberController.dispose();
     _faxController.dispose();
-    _emailController.dispose();
     _currentPositionController.dispose();
     _medicalSchoolController.dispose();
     _praxisAddressController.dispose();
@@ -80,23 +101,40 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
       String address = _addressController.text;
       String phoneNumber = _phoneNumberController.text;
       String fax = _faxController.text;
-      String email = _emailController.text;
       String currentPosition = _currentPositionController.text;
       String medicalSchool = _medicalSchoolController.text;
       String praxisAddress = _praxisAddressController.text;
 
-      // Navigate to the next page or do something with the data
-      // For example:
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => NextPage(
-      //       firstName: firstName,
-      //       lastName: lastName,
-      //       // Pass other data here
-      //     ),
-      //   ),
-      // );
+      FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+      users
+          .add({
+            'role': 'doctor',
+            'firstName': firstName,
+            'lastName': lastName,
+            'address': address,
+            'phoneNumber': phoneNumber,
+            'fax': fax,
+            'currentPosition': currentPosition,
+            'medicalScchool': medicalSchool,
+            'praxisAddress': praxisAddress,
+            'username': username,
+            'email': email,
+            })
+          .then((value) => print("User created"))
+          .catchError((error) => print("$error"));
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      );
     }
   }
 
@@ -131,54 +169,50 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
     });
   }
 
-
-void myAlert() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        title: Text('Please choose media to select'),
-        content: Container(
-          height: MediaQuery.of(context).size.height / 6,
-          child: Column(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  getImage(ImageSource.gallery);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.image),
-                    Text('From Gallery'),
-                  ],
+  void myAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: Text('Please choose media to select'),
+          content: Container(
+            height: MediaQuery.of(context).size.height / 6,
+            child: Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    getImage(ImageSource.gallery);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.image),
+                      Text('From Gallery'),
+                    ],
+                  ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  getImage(ImageSource.camera);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.camera),
-                    Text('From Camera'),
-                  ],
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    getImage(ImageSource.camera);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.camera),
+                      Text('From Camera'),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
-
-
-
- Widget _buildImageDisplay() {
+  Widget _buildImageDisplay() {
     return image != null
         ? Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -272,15 +306,6 @@ void myAlert() {
                     ),
                     validator: (value) => _validateField(value, 'fax'),
                   ),
-                  SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email Address',
-                    ),
-                    validator: (value) =>
-                        _validateField(value, 'email address'),
-                  ),
                   SizedBox(height: 20.0),
                   Container(
                     margin: EdgeInsets.only(bottom: 8.0),
@@ -356,7 +381,7 @@ void myAlert() {
                     validator: (value) =>
                         _validateField(value, 'address of the praxis'),
                   ),
-                  
+
                   ElevatedButton(
                     onPressed: () {
                       myAlert();
@@ -378,7 +403,7 @@ void myAlert() {
                         });
                         _submitForm();
                       },
-                      child: Text('Next'),
+                      child: Text('Submit form'),
                     ),
                   ),
                 ],

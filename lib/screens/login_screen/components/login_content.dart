@@ -28,9 +28,9 @@ class _LoginContentState extends State<LoginContent>
   final _formKey = GlobalKey<FormState>();
   late final List<Widget> createAccountContent;
   late final List<Widget> loginContent;
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _hasFocus = false;
 
   String? validateName(String? value) {
@@ -114,8 +114,8 @@ class _LoginContentState extends State<LoginContent>
 
   Future signIn() async {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
     );
   }
 
@@ -126,7 +126,11 @@ class _LoginContentState extends State<LoginContent>
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => RoleSelectionPage()),
+            MaterialPageRoute(builder: (context) => RoleSelectionPage(
+                username: _nameController.text,
+                email: _emailController.text,
+                password: _passwordController.text,
+            )),
           );
         },
         style: ElevatedButton.styleFrom(
@@ -167,19 +171,19 @@ class _LoginContentState extends State<LoginContent>
   @override
   void initState() {
     createAccountContent = [
-      inputField('Name', Ionicons.person_outline, nameController,
+      inputField('Name', Ionicons.person_outline, _nameController,
           validator: validateName),
-      inputField('Email', Ionicons.mail_outline, emailController,
+      inputField('Email', Ionicons.mail_outline, _emailController,
           validator: validateEmail),
-      inputField('Password', Ionicons.lock_closed_outline, passwordController,
+      inputField('Password', Ionicons.lock_closed_outline, _passwordController,
           validator: validatePassword),
       formButton('Next'),
     ];
 
     loginContent = [
-      inputField('Email', Ionicons.mail_outline, emailController,
+      inputField('Email', Ionicons.mail_outline, _emailController,
           validator: validateEmail),
-      inputField('Password', Ionicons.lock_closed_outline, passwordController,
+      inputField('Password', Ionicons.lock_closed_outline, _passwordController,
           validator: validatePassword),
       loginButton('Log In'),
       forgotPassword(),
@@ -218,9 +222,9 @@ class _LoginContentState extends State<LoginContent>
   // Example usage in your login or registration function
   void onRegisterButtonPressed() {
     // Get the name, email, and password from the text fields
-    String name = nameController.text;
-    String email = emailController.text;
-    String password = passwordController.text;
+    String name = _nameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
   }
 
   @override

@@ -6,7 +6,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
-
     return Scaffold(
       appBar: AppBar(title: Text('Home')),
       body: Padding(
@@ -18,7 +17,6 @@ class HomePage extends StatelessWidget {
               'Logged in as',
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 8),
             SizedBox(height: 16),
             Text(
               user.email!,

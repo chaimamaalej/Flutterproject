@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class QuestionnairePage extends StatefulWidget {
   final String firstName;
@@ -37,14 +38,15 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
   }
 
   void _finishQuestionnaire() {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    print(responses);
-     users.add({
-      'username': 'chaima'
-      
-    })
-    .then((value) => print(""))
-    .catchError((error) => print("$error"));
+    // FirebaseAuth.instance.createUserWithEmailAndPassword(
+    //   email: "",
+    //   password: "",
+    // );
+
+    // users
+    //     .add({'username': 'chaima'})
+    //     .then((value) => print(""))
+    //     .catchError((error) => print("$error"));
   }
 
   @override
