@@ -4,18 +4,18 @@ import 'package:stage/screens/QuestionnairePage.dart';
 
 import 'ParentInfo.dart';
 
-class FormPage extends StatefulWidget {
+class FormParentPage extends StatefulWidget {
 
   final String username;
   final String email;
   final String password;
-  FormPage({required this.username ,required this.email, required this.password});
+  FormParentPage({required this.username ,required this.email, required this.password});
 
   @override
-  _FormPageState createState() => _FormPageState();
+  _FormParentPageState createState() => _FormParentPageState();
 }
 
-class _FormPageState extends State<FormPage> {
+class _FormParentPageState extends State<FormParentPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();

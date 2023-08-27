@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stage/screens/form.dart';
+import 'package:stage/screens/form_parent.dart';
 
 import 'form_doctor.dart';
 
@@ -89,7 +89,7 @@ class RoleSelectionPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => FormPage(
+                            MaterialPageRoute(builder: (context) => FormParentPage(
                               username: this.username,
                               email: this.email,
                               password: this.password,

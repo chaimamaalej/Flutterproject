@@ -7,7 +7,7 @@ import '../../../utils/constants.dart';
 import '../../../utils/helper_functions.dart';
 import '../../role_selection.dart';
 import '../animations/change_screen_animations.dart';
-import '../../form.dart';
+import '../../form_parent.dart';
 import 'top_text.dart';
 import 'package:ionicons/ionicons.dart';
 
