@@ -83,9 +83,6 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       responses.add(controllers[i].text);
     }
 
-    String responsesJson =
-        jsonEncode(responses);
-
     await users
         .add({
           'role': 'parent',
@@ -98,7 +95,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
           'mobileNumber': mobileNumber,
           'childFirstName': childFirstName,
           'childLastName': childLastName,
-          'questionnaire': responsesJson
+          'questionnaire': jsonEncode(responses)
         })
         .then((value) => print("User created"))
         .catchError((error) => print("$error"));
