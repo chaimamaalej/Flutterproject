@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:convert';
 
 class QuestionnairePage extends StatefulWidget {
   final String firstName;
@@ -95,7 +94,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
           'mobileNumber': mobileNumber,
           'childFirstName': childFirstName,
           'childLastName': childLastName,
-          'questionnaire': jsonEncode(responses)
+          'questionnaire': responses
         })
         .then((value) => print("User created"))
         .catchError((error) => print("$error"));
