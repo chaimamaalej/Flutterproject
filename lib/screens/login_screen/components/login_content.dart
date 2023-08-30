@@ -89,6 +89,39 @@ class _LoginContentState extends State<LoginContent>
     );
   }
 
+  Widget passwordInputField(
+      String hint, IconData iconData, TextEditingController controller,
+      {required String? Function(String?) validator}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
+      child: SizedBox(
+        height: 50,
+        child: Material(
+          elevation: 8,
+          shadowColor: Colors.black87,
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+          child: TextFormField(
+            controller: controller,
+            validator: validator,
+            textAlignVertical: TextAlignVertical.bottom,
+            obscureText: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              hintText: hint,
+              prefixIcon: Icon(iconData),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget loginButton(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 135, vertical: 16),
@@ -126,11 +159,12 @@ class _LoginContentState extends State<LoginContent>
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => RoleSelectionPage(
-                username: _nameController.text,
-                email: _emailController.text,
-                password: _passwordController.text,
-            )),
+            MaterialPageRoute(
+                builder: (context) => RoleSelectionPage(
+                      username: _nameController.text,
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    )),
           );
         },
         style: ElevatedButton.styleFrom(
@@ -175,7 +209,7 @@ class _LoginContentState extends State<LoginContent>
           validator: validateName),
       inputField('Email', Ionicons.mail_outline, _emailController,
           validator: validateEmail),
-      inputField('Password', Ionicons.lock_closed_outline, _passwordController,
+      passwordInputField('Password', Ionicons.lock_closed_outline, _passwordController,
           validator: validatePassword),
       formButton('Next'),
     ];
@@ -183,7 +217,7 @@ class _LoginContentState extends State<LoginContent>
     loginContent = [
       inputField('Email', Ionicons.mail_outline, _emailController,
           validator: validateEmail),
-      inputField('Password', Ionicons.lock_closed_outline, _passwordController,
+      passwordInputField('Password', Ionicons.lock_closed_outline, _passwordController,
           validator: validatePassword),
       loginButton('Log In'),
       forgotPassword(),
