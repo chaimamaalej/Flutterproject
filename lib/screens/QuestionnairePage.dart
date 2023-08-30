@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
 
 class QuestionnairePage extends StatefulWidget {
   final String firstName;
@@ -77,6 +78,14 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
 
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
+    List<String> responses = [];
+    for (int i = 0; i < controllers.length; i++) {
+      responses.add(controllers[i].text);
+    }
+
+    String responsesJson =
+        jsonEncode(responses);
+
     await users
         .add({
           'role': 'parent',
@@ -89,6 +98,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
           'mobileNumber': mobileNumber,
           'childFirstName': childFirstName,
           'childLastName': childLastName,
+          'questionnaire': responsesJson
         })
         .then((value) => print("User created"))
         .catchError((error) => print("$error"));
@@ -111,6 +121,11 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       },
     );
   }
+
+  List<TextEditingController> controllers = List.generate(
+    10, // Number of questions
+    (index) => TextEditingController(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -170,10 +185,14 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
         SizedBox(height: 8.0),
         Column(
           children: [
-            _buildResponseRadio(questionIndex, 0, 'Not at all'),
-            _buildResponseRadio(questionIndex, 1, 'A little bit'),
-            _buildResponseRadio(questionIndex, 2, 'Quite a bit'),
-            _buildResponseRadio(questionIndex, 3, 'Very much'),
+            _buildResponseRadio(
+                questionIndex, 0, 'Not at all', controllers[questionIndex - 1]),
+            _buildResponseRadio(questionIndex, 1, 'A little bit',
+                controllers[questionIndex - 1]),
+            _buildResponseRadio(questionIndex, 2, 'Quite a bit',
+                controllers[questionIndex - 1]),
+            _buildResponseRadio(
+                questionIndex, 3, 'Very much', controllers[questionIndex - 1]),
           ],
         ),
         SizedBox(height: 16.0),
@@ -181,8 +200,8 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     );
   }
 
-  Widget _buildResponseRadio(
-      int questionIndex, int responseIndex, String label) {
+  Widget _buildResponseRadio(int questionIndex, int responseIndex, String label,
+      TextEditingController controller) {
     final response = responses[questionIndex] ?? -1;
     final isSelected = response == responseIndex;
 
@@ -191,7 +210,11 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       child: RadioListTile<int>(
         value: responseIndex,
         groupValue: response,
-        onChanged: (value) => _handleResponse(questionIndex, value!),
+        onChanged: (value) {
+          _handleResponse(questionIndex, value!);
+          controller.text = value.toString();
+          setState(() {});
+        },
         title: Text(
           label,
           style: TextStyle(
