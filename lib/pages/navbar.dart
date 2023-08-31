@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -39,10 +40,11 @@ class _NavBarState extends State<NavBar> {
     });
   }
 
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
-
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -50,13 +52,26 @@ class _NavBarState extends State<NavBar> {
           UserAccountsDrawerHeader(
             accountName: Text(
               '',
-              style: TextStyle(fontSize: 26), // Set the desired font size
+              style: TextStyle(fontSize: 26),
             ),
             accountEmail: Align(
               alignment: Alignment.bottomLeft,
-              child: Text(
-                '${user.displayName!}',
-                style: TextStyle(fontSize: 20), // Set the desired font size
+              child: FutureBuilder<QuerySnapshot>(
+                future: users.where('email', isEqualTo: user.email).get(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                      '${snapshot.data!.docs[0]['childFirstName']} ${snapshot.data!.docs[0]['childLastName']}',
+                      style:
+                          TextStyle(fontSize: 20),
+                    );
+                  }
+                  return Text(
+                    'loading',
+                    style: TextStyle(fontSize: 20),
+                  );
+                },
               ),
             ),
             decoration: BoxDecoration(
