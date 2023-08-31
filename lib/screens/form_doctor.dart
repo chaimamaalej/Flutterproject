@@ -4,10 +4,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:stage/screens/QuestionnairePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:stage/screens/home_page.dart';
+import 'package:stage/screens/home_page_parent.dart';
 import 'package:stage/screens/login_screen/login_screen.dart';
 import 'form_parent.dart';
-import 'package:stage/screens/home_page.dart';
+import 'package:stage/screens/home_page_parent.dart';
 import 'dart:io';
 
 class FormDoctorPage extends StatefulWidget {

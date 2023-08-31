@@ -205,7 +205,7 @@ class _LoginContentState extends State<LoginContent>
   @override
   void initState() {
     createAccountContent = [
-      inputField('Name', Ionicons.person_outline, _nameController,
+      inputField('Username', Ionicons.person_outline, _nameController,
           validator: validateName),
       inputField('Email', Ionicons.mail_outline, _emailController,
           validator: validateEmail),

@@ -103,7 +103,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Successfuly registered'),
+          title: Text('Successfully registered'),
           content: Text('Please return to the login page'),
           actions: [
             TextButton(
