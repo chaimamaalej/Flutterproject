@@ -120,6 +120,17 @@ class _NavBarState extends State<NavBar> {
               },
             ),
           ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text(
+              'Log Out',
+              style: TextStyle(fontSize: 20),
+            ),
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
         ],
       ),
     );

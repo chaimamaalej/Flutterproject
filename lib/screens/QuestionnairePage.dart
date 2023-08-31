@@ -5,6 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'home_page_parent.dart';
+
 class QuestionnairePage extends StatefulWidget {
   final String firstName;
   final String lastName;
@@ -110,12 +112,18 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Successfully registered'),
-          content: Text('Please return to the login page'),
+          content: Text('Your user is created'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the popup
-              },
+              Navigator.pop(context); // Close the popup
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ParentHomePage(),
+                ),
+              );
+            },
               child: Text('Close'),
             ),
           ],

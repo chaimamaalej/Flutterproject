@@ -115,7 +115,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
             child: Column(
               children: [
                 Text(
-                  'Let\'s play ${user.displayName!}',
+                  'Welcome ${user.displayName!}',
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
