@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +91,8 @@ class _ParentHomePageState extends State<ParentHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
+
     return Scaffold(
       drawer: NavBar(
         isMusicOn: isMusicOn,
@@ -112,7 +115,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
             child: Column(
               children: [
                 Text(
-                  "Let's play ",
+                  'Let\'s play ${user.displayName!}',
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,

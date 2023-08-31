@@ -104,7 +104,7 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
       String medicalSchool = _medicalSchoolController.text;
       String praxisAddress = _praxisAddressController.text;
 
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );

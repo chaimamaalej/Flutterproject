@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -40,6 +41,8 @@ class _NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -52,7 +55,7 @@ class _NavBarState extends State<NavBar> {
             accountEmail: Align(
               alignment: Alignment.bottomLeft,
               child: Text(
-                'Chaima Maalej',
+                '${user.displayName!}',
                 style: TextStyle(fontSize: 20), // Set the desired font size
               ),
             ),

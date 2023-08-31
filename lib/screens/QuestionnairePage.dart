@@ -70,10 +70,16 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
   }
 
   void _finishQuestionnaire() async {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+
+    if (userCredential.user != null) {
+      User? user = userCredential.user;
+      await user?.updateDisplayName(username);
+    }
 
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
