@@ -61,10 +61,11 @@ class _NavBarState extends State<NavBar> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasData) {
+                    QueryDocumentSnapshot<Object?> data =
+                        snapshot.data!.docs[0];
                     return Text(
-                      '${snapshot.data!.docs[0]['childFirstName']} ${snapshot.data!.docs[0]['childLastName']}',
-                      style:
-                          TextStyle(fontSize: 20),
+                      '${data['childFirstName']} ${data['childLastName']}',
+                      style: TextStyle(fontSize: 20),
                     );
                   }
                   return Text(
