@@ -72,6 +72,10 @@ class _GameScreenState extends State<GameScreen> {
       startTimer();
     }
 
+    if (dotsConnected == connectDots.length) {
+    return; // If the game is already completed, do not process further user drawing.
+  }
+
     for (int i = 0; i < connectDots.length; i++) {
       if ((userDot - connectDots[i]).distance < 10.0) {
         setState(() {
@@ -94,12 +98,16 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void startTimer() {
-    timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-      setState(() {
-        secondsElapsed += 100; // Increment by 100 milliseconds
-      });
+  timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    setState(() {
+      secondsElapsed += 100; // Increment by 100 milliseconds
     });
-  }
+
+    if (dotsConnected == connectDots.length) {
+      stopTimer();
+    }
+  });
+}
 
   void checkScore() {
     int connectedDots = 0;

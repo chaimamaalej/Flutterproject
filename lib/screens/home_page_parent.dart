@@ -6,17 +6,18 @@ import 'package:stage/pages/history.dart';
 import 'package:stage/pages/informationPage.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../components/bottom_nav_bar.dart';
+import '../pages/history.dart';
 import '../pages/informationPage.dart';
 import '../pages/navbar.dart';
 
-class HomePage extends StatefulWidget {
+class ParentHomePage extends StatefulWidget {
   final user = FirebaseAuth.instance.currentUser!;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _ParentHomePageState createState() => _ParentHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ParentHomePageState extends State<ParentHomePage> {
   int _selectedIndex = 0;
   bool isMusicOn =
       true; // Tracc:\src\geometry2\lib\components\bottom_nav_bar.dart c:\src\geometry2\lib\components\figure_tile.dartk the state of the music toggle
@@ -90,52 +91,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser!;
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-    return FutureBuilder<QuerySnapshot>(
-      future: users.where('email', isEqualTo: currentUser.email).get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          QueryDocumentSnapshot<Object?> data = snapshot.data!.docs[0];
-          if (data['role'] == 'parent') {
-            return buildParentPage();
-          }
-          return buildDoctorPage();
-        }
-        return Text(
-          'loading',
-          style: TextStyle(fontSize: 20),
-        );
-      },
-    );
-  }
-
-  Widget buildDoctorPage() {
-    final user = FirebaseAuth.instance.currentUser!;
-    return Scaffold(
-      appBar: AppBar(title: Text('Home')),
-      body: Padding(
-        padding: EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Doctor logged in as',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 16),
-            Text(
-              user.email!,
-              style: TextStyle(fontSize: 16),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildParentPage() {
     final user = FirebaseAuth.instance.currentUser!;
 
     return Scaffold(
@@ -179,3 +134,33 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/widgets.dart';
+
+// class HomePage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final user = FirebaseAuth.instance.currentUser!;
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Home')),
+//       body: Padding(
+//         padding: EdgeInsets.all(32),
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text(
+//               'Logged in as',
+//               style: TextStyle(fontSize: 16),
+//             ),
+//             SizedBox(height: 16),
+//             Text(
+//               user.email!,
+//               style: TextStyle(fontSize: 16),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
