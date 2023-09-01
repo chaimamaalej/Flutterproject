@@ -80,15 +80,14 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       int value = int.parse(item);
       total += value;
     }
-    double average = total / 10;
 
-    if (average <= 2.5) {
+    if (total <= 7.5) {
       return ['spiral', 'letter_r'];
     }
-    if (average <= 5) {
+    if (total <= 15) {
       return ['circle', 'star'];
     }
-    if (average <= 7.5) {
+    if (total <= 22.5) {
       return ['square', 'triangle'];
     }
 

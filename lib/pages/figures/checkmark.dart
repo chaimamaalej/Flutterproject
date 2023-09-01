@@ -1,9 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stage/pages/figures/circle.dart';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:stage/pages/games.dart';
 
 void main() {
   runApp(Checkmark());
@@ -36,7 +39,8 @@ class _GameScreenState extends State<GameScreen> {
   int neighborDots = 0;
   bool correctTriangleFormed = false;
   late AudioPlayer audioPlayer;
-  String audioFilePath = 'assets/mixkit-a-happy-child-532.mp3'; // Replace with the actual path
+  String audioFilePath =
+      'assets/mixkit-a-happy-child-532.mp3'; // Replace with the actual path
 
   @override
   void initState() {
@@ -48,7 +52,6 @@ class _GameScreenState extends State<GameScreen> {
 
   void playAudio() async {
     int result = await audioPlayer.play(audioFilePath, isLocal: true);
-
 
     if (result == 1) {
       // Success
@@ -73,8 +76,8 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     if (dotsConnected == connectDots.length) {
-    return; // If the game is already completed, do not process further user drawing.
-  }
+      return; // If the game is already completed, do not process further user drawing.
+    }
 
     for (int i = 0; i < connectDots.length; i++) {
       if ((userDot - connectDots[i]).distance < 10.0) {
@@ -98,16 +101,32 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void startTimer() {
-  timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-    setState(() {
-      secondsElapsed += 100; // Increment by 100 milliseconds
-    });
+    timer = Timer.periodic(Duration(milliseconds: 100), (timer) async {
+      setState(() {
+        secondsElapsed += 100; // Increment by 100 milliseconds
+      });
 
-    if (dotsConnected == connectDots.length) {
-      stopTimer();
-    }
-  });
-}
+      if (dotsConnected == connectDots.length) {
+        stopTimer();
+        final currentUser = FirebaseAuth.instance.currentUser!;
+        CollectionReference gameStatus =
+            FirebaseFirestore.instance.collection('game_status');
+
+        QuerySnapshot querySnapshot =
+            await gameStatus.where('email', isEqualTo: currentUser.email).get();
+
+        await gameStatus.doc(querySnapshot.docs[0].id).update({
+          'scores': FieldValue.arrayUnion([score]),
+          'durations': FieldValue.arrayUnion([secondsElapsed]),
+          'progressOrdinal': FieldValue.increment(1),
+        });
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => GamesPage()),
+        );
+      }
+    });
+  }
 
   void checkScore() {
     int connectedDots = 0;
@@ -126,6 +145,7 @@ class _GameScreenState extends State<GameScreen> {
 
     if (dotsConnected == connectDots.length) {
       stopTimer();
+      print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     }
   }
 
@@ -227,37 +247,37 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   List<Offset> generateDottedCheckmark(int numberOfDots, double size) {
-  List<Offset> dots = [];
-  double centerX = 200.0;
-  double centerY = 290.0;
+    List<Offset> dots = [];
+    double centerX = 200.0;
+    double centerY = 290.0;
 
-  // Calculate the coordinates for the checkmark shape
-  double x1 = centerX - size / 7;
-  double y1 = centerY + size / 7;
-  double x2 = centerX - size / 3;
-  double y2 = centerY - size / 3;
-  double x3 = centerX + size / 2;
-  double y3 = centerY - size / 2;
-  double x4 = x1 + (x2 - x1) / 2;
-  double y4 = y1 + (y2 - y1) / 2;
-  double x5 = x1 + (x3 - x1) / 2;
-  double y5 = y1 + (y3 - y1) / 2;
+    // Calculate the coordinates for the checkmark shape
+    double x1 = centerX - size / 7;
+    double y1 = centerY + size / 7;
+    double x2 = centerX - size / 3;
+    double y2 = centerY - size / 3;
+    double x3 = centerX + size / 2;
+    double y3 = centerY - size / 2;
+    double x4 = x1 + (x2 - x1) / 2;
+    double y4 = y1 + (y2 - y1) / 2;
+    double x5 = x1 + (x3 - x1) / 2;
+    double y5 = y1 + (y3 - y1) / 2;
 
-  // Add the vertices of the checkmark to the list of dots
-  dots.add(Offset(x1, y1));
-  dots.add(Offset(x2, y2));
-  dots.add(Offset(x3, y3));
+    // Add the vertices of the checkmark to the list of dots
+    dots.add(Offset(x1, y1));
+    dots.add(Offset(x2, y2));
+    dots.add(Offset(x3, y3));
 
-  // If there are more dots needed, you can add additional dots to refine the shape
-  if (numberOfDots > 3) {
-    dots.add(Offset(x4,y4));
-    dots.add(Offset(x5,y5));
-    dots.add(Offset(x4 + (x2 - x4) / 2, y4 + (y2 - y4) / 2));
-    dots.add(Offset(x1 + (x4 - x1) / 2, y4 + (y1 - y4) / 2));
-    dots.add(Offset(x1 + (x5 - x1) / 2, y5 + (y1 - y5) / 2));
-    dots.add(Offset(x5 + (x3 - x5) / 2, y5 + (y3 - y5) / 2));
+    // If there are more dots needed, you can add additional dots to refine the shape
+    if (numberOfDots > 3) {
+      dots.add(Offset(x4, y4));
+      dots.add(Offset(x5, y5));
+      dots.add(Offset(x4 + (x2 - x4) / 2, y4 + (y2 - y4) / 2));
+      dots.add(Offset(x1 + (x4 - x1) / 2, y4 + (y1 - y4) / 2));
+      dots.add(Offset(x1 + (x5 - x1) / 2, y5 + (y1 - y5) / 2));
+      dots.add(Offset(x5 + (x3 - x5) / 2, y5 + (y3 - y5) / 2));
+    }
+
+    return dots;
   }
-
-  return dots;
-}
 }
