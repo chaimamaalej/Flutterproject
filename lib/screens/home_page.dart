@@ -33,9 +33,6 @@ class _HomePageState extends State<HomePage> {
     if (isMusicOn) {
       playAudio(); // Start playing audio if music is on
     }
-
-    final currentUser = FirebaseAuth.instance.currentUser!;
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
   }
 
   Future<void> playAudio() async {
@@ -94,7 +91,25 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return buildParentPage();
+    final currentUser = FirebaseAuth.instance.currentUser!;
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    return FutureBuilder<QuerySnapshot>(
+      future: users.where('email', isEqualTo: currentUser.email).get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          QueryDocumentSnapshot<Object?> data = snapshot.data!.docs[0];
+          if (data['role'] == 'parent') {
+            return buildParentPage();
+          }
+          return buildDoctorPage();
+        }
+        return Text(
+          'loading',
+          style: TextStyle(fontSize: 20),
+        );
+      },
+    );
   }
 
   Widget buildDoctorPage() {
@@ -122,7 +137,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildParentPage() {
-    
     final user = FirebaseAuth.instance.currentUser!;
 
     return Scaffold(
