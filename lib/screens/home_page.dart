@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
     return FutureBuilder<QuerySnapshot>(
       future: users.where('email', isEqualTo: currentUser.email).get(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
           QueryDocumentSnapshot<Object?> data = snapshot.data!.docs[0];
           if (data['role'] == 'parent') {
             return buildParentPage();

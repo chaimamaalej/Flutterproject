@@ -64,7 +64,7 @@ class _NavBarState extends State<NavBar> {
                 future: users.where('email', isEqualTo: user.email).get(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasData) {
+                  if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                     QueryDocumentSnapshot<Object?> data =
                         snapshot.data!.docs[0];
                     return Text(
