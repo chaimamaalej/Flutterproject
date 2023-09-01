@@ -82,13 +82,13 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     }
     double average = total / 10;
 
-    if (average < 3) {
+    if (average <= 2.5) {
       return ['spiral', 'letter_r'];
     }
     if (average <= 5) {
       return ['circle', 'star'];
     }
-    if (average <= 7) {
+    if (average <= 7.5) {
       return ['square', 'triangle'];
     }
 
