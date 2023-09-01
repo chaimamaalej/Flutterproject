@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:stage/screens/login_screen/login_screen.dart';
 
 class NavBar extends StatefulWidget {
   final bool isMusicOn;
@@ -78,7 +79,7 @@ class _NavBarState extends State<NavBar> {
             decoration: BoxDecoration(
               color: _selectedColor,
               image: DecorationImage(
-                image: NetworkImage(
+                image: AssetImage(
                   'assets/images/ADHD.jpg',
                 ),
                 fit: BoxFit.cover,
