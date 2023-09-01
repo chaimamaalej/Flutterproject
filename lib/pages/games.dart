@@ -53,7 +53,7 @@ class _GamesPageState extends State<GamesPage> {
           QueryDocumentSnapshot<Object?> data = snapshot.data!.docs[0];
 
           int index = data['progressOrdinal'];
- 
+
           if (index == data['games'].length) {
             return Text(
               'You finished all the games, well done. Return to the home page',
@@ -99,9 +99,8 @@ class _GamesPageState extends State<GamesPage> {
               break;
           }
         }
-        return Text(
-          'loading',
-          style: TextStyle(fontSize: 20),
+        return Center(
+          child: CircularProgressIndicator(),
         );
       },
     );

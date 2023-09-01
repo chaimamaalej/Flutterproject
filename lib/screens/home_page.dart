@@ -103,9 +103,8 @@ class _HomePageState extends State<HomePage> {
           }
           return buildDoctorPage();
         }
-        return Text(
-          'loading',
-          style: TextStyle(fontSize: 20),
+        return Center(
+          child: CircularProgressIndicator(),
         );
       },
     );
