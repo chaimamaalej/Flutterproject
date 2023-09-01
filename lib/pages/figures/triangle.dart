@@ -118,7 +118,7 @@ class _GameScreenState extends State<GameScreen> {
 
     if (dotsConnected == connectDots.length) {
       stopTimer();
-      _showDialog(context);
+      _congratulationsDialog(context);
     }
   }
 
@@ -127,7 +127,7 @@ class _GameScreenState extends State<GameScreen> {
     timer = null;
   }
 
-  void _showDialog(BuildContext context) {
+  void _congratulationsDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

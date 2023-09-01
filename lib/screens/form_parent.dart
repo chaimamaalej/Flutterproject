@@ -3,7 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'QuestionnairePage.dart';
+import 'questionnaire_page.dart';
 
 class ParentInfoPage extends StatefulWidget {
   final bool showMotherFields;

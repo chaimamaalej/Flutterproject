@@ -71,6 +71,30 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     childLastName = widget.childLastName;
   }
 
+  List<String> getGames(List<String> questionnaire) {
+    List<String> games = [];
+
+    int total = 0;
+
+    for (String item in questionnaire) {
+      int value = int.parse(item);
+      total += value;
+    }
+    double average = total / 10;
+
+    if (average < 3) {
+      return ['checkmark'];
+    }
+    if (average <= 5) {
+      return ['square', 'triangle'];
+    }
+    if (average <= 7) {
+      return ['circle', 'star'];
+    }
+
+    return ['spiral', 'letter_r'];
+  }
+
   void _finishQuestionnaire() async {
     UserCredential userCredential =
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -84,10 +108,12 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     }
 
     CollectionReference users = FirebaseFirestore.instance.collection('users');
+    CollectionReference gameStatus =
+        FirebaseFirestore.instance.collection('game_status');
 
-    List<String> responses = [];
+    List<String> questionnaire = [];
     for (int i = 0; i < controllers.length; i++) {
-      responses.add(controllers[i].text);
+      questionnaire.add(controllers[i].text);
     }
 
     await users
@@ -102,9 +128,20 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
           'mobileNumber': mobileNumber,
           'childFirstName': childFirstName,
           'childLastName': childLastName,
-          'questionnaire': responses
+          'questionnaire': questionnaire
         })
         .then((value) => print("User created"))
+        .catchError((error) => print("$error"));
+
+    await gameStatus
+        .add({
+          'email': email,
+          'games': getGames(questionnaire),
+          'scores': [],
+          'durations': [],
+          'progressOrdinal': 0
+        })
+        .then((value) => print("Game status created"))
         .catchError((error) => print("$error"));
 
     showDialog(
@@ -116,14 +153,14 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
           actions: [
             TextButton(
               onPressed: () {
-              Navigator.pop(context); // Close the popup
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(),
-                ),
-              );
-            },
+                Navigator.pop(context); // Close the popup
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  ),
+                );
+              },
               child: Text('Close'),
             ),
           ],
