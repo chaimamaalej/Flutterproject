@@ -104,12 +104,14 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
       String medicalSchool = _medicalSchoolController.text;
       String praxisAddress = _praxisAddressController.text;
 
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      CollectionReference users = FirebaseFirestore.instance.collection('users');
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
 
       await users
           .add({
@@ -124,7 +126,7 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
             'praxisAddress': praxisAddress,
             'username': username,
             'email': email,
-            })
+          })
           .then((value) => print("User created"))
           .catchError((error) => print("$error"));
 
@@ -133,11 +135,17 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Successfuly registered'),
-            content: Text('Please return to the login page'),
+          content: Text('Your user is created'),
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context); // Close the popup
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(),
+                    ),
+                  );
                 },
                 child: Text('Close'),
               ),

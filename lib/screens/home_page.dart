@@ -99,9 +99,9 @@ class _HomePageState extends State<HomePage> {
         if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
           QueryDocumentSnapshot<Object?> data = snapshot.data!.docs[0];
           if (data['role'] == 'parent') {
-            return buildParentPage();
+            return buildParentPage(data);
           }
-          return buildDoctorPage();
+          return buildDoctorPage(data);
         }
         return Center(
           child: CircularProgressIndicator(),
@@ -110,33 +110,59 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildDoctorPage() {
-    final user = FirebaseAuth.instance.currentUser!;
-    return Scaffold(
-      appBar: AppBar(title: Text('Home')),
-      body: Padding(
-        padding: EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Doctor logged in as',
-              style: TextStyle(fontSize: 16),
+  Widget buildDoctorPage(QueryDocumentSnapshot<Object?> user) {
+    CollectionReference gameStatus =
+        FirebaseFirestore.instance.collection('game_status');
+
+    return FutureBuilder<QuerySnapshot>(
+      future: gameStatus.get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+          List<QueryDocumentSnapshot<Object?>> games = snapshot.data!.docs;
+          return Scaffold(
+            appBar: AppBar(title: Text('Home')),
+            body: Padding(
+              padding: EdgeInsets.all(32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Doctor logged in as',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "${user['firstName']} ${user['lastName']}",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 40),
+                  Text(
+                    "List of user games",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                          title: Text('${games[index]['email']}'),
+                          subtitle: Text(
+                              'Scores: ${games[index]['scores']}, Durations: ${games[index]['durations']}'));
+                    },
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 16),
-            Text(
-              user.email!,
-              style: TextStyle(fontSize: 16),
-            )
-          ],
-        ),
-      ),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 
-  Widget buildParentPage() {
-    final user = FirebaseAuth.instance.currentUser!;
-
+  Widget buildParentPage(QueryDocumentSnapshot<Object?> user) {
     return Scaffold(
       drawer: NavBar(
         isMusicOn: isMusicOn,
@@ -159,7 +185,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 Text(
-                  'Welcome ${user.displayName!}',
+                  "Welcome ${user['username']}",
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
