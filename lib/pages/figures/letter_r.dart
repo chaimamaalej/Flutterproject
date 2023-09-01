@@ -145,7 +145,6 @@ class _GameScreenState extends State<GameScreen> {
 
     if (dotsConnected == connectDots.length) {
       stopTimer();
-      print("00000000000000000000000000");
     }
   }
 

@@ -10,7 +10,6 @@ import 'package:stage/pages/games.dart';
 
 void main() {
   runApp(Spiral());
-  print("Your message here");
 }
 
 class Spiral extends StatelessWidget {

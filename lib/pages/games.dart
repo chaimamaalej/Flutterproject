@@ -52,9 +52,6 @@ class _GamesPageState extends State<GamesPage> {
         if (snapshot.hasData) {
           QueryDocumentSnapshot<Object?> data = snapshot.data!.docs[0];
 
-          print(data['progressOrdinal']);
-          print(data['games']);
-
           int index = data['progressOrdinal'];
  
           if (index == data['games'].length) {
