@@ -83,16 +83,16 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     double average = total / 10;
 
     if (average < 3) {
-      return ['checkmark'];
+      return ['spiral', 'letter_r'];
     }
     if (average <= 5) {
-      return ['square', 'triangle'];
-    }
-    if (average <= 7) {
       return ['circle', 'star'];
     }
+    if (average <= 7) {
+      return ['square', 'triangle'];
+    }
 
-    return ['spiral', 'letter_r'];
+    return ['checkmark'];
   }
 
   void _finishQuestionnaire() async {
