@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'home_page_parent.dart';
+import 'home_page.dart';
 
 class QuestionnairePage extends StatefulWidget {
   final String firstName;
@@ -120,7 +120,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ParentHomePage(),
+                  builder: (context) => HomePage(),
                 ),
               );
             },
