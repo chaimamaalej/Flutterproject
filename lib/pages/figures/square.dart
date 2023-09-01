@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stage/pages/games.dart';
 
 void main() {
   runApp(Square());
@@ -34,8 +37,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    connectDots =
-        generateDottedSquare(6, 200.0);// Initialize connectDots here
+    connectDots = generateDottedSquare(6, 200.0); // Initialize connectDots here
   }
 
   void onUserDraw(Offset userDot) {
@@ -45,8 +47,8 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     if (dotsConnected == connectDots.length) {
-    return; // If the game is already completed, do not process further user drawing.
-  }
+      return; // If the game is already completed, do not process further user drawing.
+    }
 
     for (int i = 0; i < connectDots.length; i++) {
       if ((userDot - connectDots[i]).distance < 25.0) {
@@ -63,17 +65,33 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
-void startTimer() {
-  timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-    setState(() {
-      secondsElapsed += 100; // Increment by 100 milliseconds
-    });
+  void startTimer() {
+    timer = Timer.periodic(Duration(milliseconds: 100), (timer) async {
+      setState(() {
+        secondsElapsed += 100; // Increment by 100 milliseconds
+      });
 
-    if (dotsConnected == connectDots.length) {
-      stopTimer();
-    }
-  });
-}
+      if (dotsConnected == connectDots.length) {
+        stopTimer();
+        final currentUser = FirebaseAuth.instance.currentUser!;
+        CollectionReference gameStatus =
+            FirebaseFirestore.instance.collection('game_status');
+
+        QuerySnapshot querySnapshot =
+            await gameStatus.where('email', isEqualTo: currentUser.email).get();
+
+        await gameStatus.doc(querySnapshot.docs[0].id).update({
+          'scores': FieldValue.arrayUnion([score]),
+          'durations': FieldValue.arrayUnion([secondsElapsed]),
+          'progressOrdinal': FieldValue.increment(1),
+        });
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => GamesPage()),
+        );
+      }
+    });
+  }
 
   void checkScore() {
     int connectedDots = 0;
@@ -100,7 +118,6 @@ void startTimer() {
     timer = null;
   }
 
-
   bool isNeighborDot(Offset p1, Offset p2) {
     for (int i = 0; i < connectDots.length; i++) {
       if ((p1 - connectDots[i]).distance < 10.0 &&
@@ -115,11 +132,11 @@ void startTimer() {
     stopTimer();
     setState(() {
       isDrawing = false;
-      dotsConnected=0;
+      dotsConnected = 0;
       userDots.clear();
       score = 0;
       secondsElapsed = 0;
-      totalConnectedDots=0;
+      totalConnectedDots = 0;
     });
   }
 
@@ -127,7 +144,6 @@ void startTimer() {
   Widget build(BuildContext context) {
     dotsConnected = userDots.toSet().intersection(connectDots.toSet()).length;
     percentage = dotsConnected * 100 / connectDots.length;
-
 
     return Scaffold(
       appBar: AppBar(
@@ -138,7 +154,7 @@ void startTimer() {
           if (!isDrawing) {
             setState(() {
               isDrawing = true; // Start drawing
-           });
+            });
           }
           if ((timer == null) && (dotsConnected != connectDots.length)) {
             startTimer();

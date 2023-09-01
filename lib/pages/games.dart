@@ -59,7 +59,7 @@ class _GamesPageState extends State<GamesPage> {
  
           if (index == data['games'].length) {
             return Text(
-              'Finished, well done. Return to the home page',
+              'You finished all the games, well done. Return to the home page',
               style: TextStyle(fontSize: 20),
             );
           }

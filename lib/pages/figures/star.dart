@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stage/pages/games.dart';
 
 void main() {
   runApp(Star());
@@ -34,10 +37,8 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    connectDots =
-        generateDottedStar(40, 140.0); // Initialize connectDots here
+    connectDots = generateDottedStar(40, 140.0); // Initialize connectDots here
   }
-
 
   void onUserDraw(Offset userDot) {
     if (!isDrawing) {
@@ -46,8 +47,8 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     if (dotsConnected == connectDots.length) {
-    return; // If the game is already completed, do not process further user drawing.
-  }
+      return; // If the game is already completed, do not process further user drawing.
+    }
 
     for (int i = 0; i < connectDots.length; i++) {
       if ((userDot - connectDots[i]).distance < 25.0) {
@@ -65,16 +66,32 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void startTimer() {
-  timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-    setState(() {
-      secondsElapsed += 100; // Increment by 100 milliseconds
-    });
+    timer = Timer.periodic(Duration(milliseconds: 100), (timer) async {
+      setState(() {
+        secondsElapsed += 100; // Increment by 100 milliseconds
+      });
 
-    if (dotsConnected == connectDots.length) {
-      stopTimer();
-    }
-  });
-}
+      if (dotsConnected == connectDots.length) {
+        stopTimer();
+        final currentUser = FirebaseAuth.instance.currentUser!;
+        CollectionReference gameStatus =
+            FirebaseFirestore.instance.collection('game_status');
+
+        QuerySnapshot querySnapshot =
+            await gameStatus.where('email', isEqualTo: currentUser.email).get();
+
+        await gameStatus.doc(querySnapshot.docs[0].id).update({
+          'scores': FieldValue.arrayUnion([score]),
+          'durations': FieldValue.arrayUnion([secondsElapsed]),
+          'progressOrdinal': FieldValue.increment(1),
+        });
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => GamesPage()),
+        );
+      }
+    });
+  }
 
   void checkScore() {
     int connectedDots = 0;
@@ -93,7 +110,6 @@ class _GameScreenState extends State<GameScreen> {
     if (dotsConnected == connectDots.length) {
       stopTimer();
     }
-
   }
 
   void stopTimer() {
@@ -115,11 +131,11 @@ class _GameScreenState extends State<GameScreen> {
     stopTimer();
     setState(() {
       isDrawing = false;
-      dotsConnected=0;
+      dotsConnected = 0;
       userDots.clear();
       score = 0;
       secondsElapsed = 0;
-      totalConnectedDots=0;
+      totalConnectedDots = 0;
     });
   }
 
@@ -137,7 +153,7 @@ class _GameScreenState extends State<GameScreen> {
           if (!isDrawing) {
             setState(() {
               isDrawing = true; // Start drawing
-           });
+            });
           }
           if ((timer == null) && (dotsConnected != connectDots.length)) {
             startTimer();
@@ -215,7 +231,7 @@ class DotPainter extends CustomPainter {
       }
       canvas.drawCircle(connectDot, 5, dotPaint);
     }
-        
+
     dotPaint.color = Colors.red; // Set color to red for the lines
     for (int i = 0; i < userDots.length - 1; i += 1) {
       canvas.drawLine(userDots[i], userDots[i + 1], dotPaint);
@@ -241,19 +257,18 @@ List<Offset> generateDottedStar(int numberOfDots, double radius) {
     double outerX = centerX + radius * cos(outerAngle);
     double outerY = centerY + radius * sin(outerAngle);
     dots.add(Offset(outerX, outerY));
-    
 
     double innerAngle = outerAngle + angleIncrement / 2;
     double innerX = centerX + radius / 2 * cos(innerAngle);
     double innerY = centerY + radius / 2 * sin(innerAngle);
     dots.add(Offset(innerX, innerY));
 
-    double middleAngle = outerAngle + innerAngle+ angleIncrement/3.5;
+    double middleAngle = outerAngle + innerAngle + angleIncrement / 3.5;
     double innerX2 = centerX + radius / 1.5 * cos(middleAngle);
     double innerY2 = centerY + radius / 1.5 * sin(middleAngle);
     dots.add(Offset(innerX2, innerY2));
 
-    double middleAngle1 = outerAngle + innerAngle+ angleIncrement/1.4;
+    double middleAngle1 = outerAngle + innerAngle + angleIncrement / 1.4;
     double outerX2 = centerX + radius / 1.5 * cos(middleAngle1);
     double outerY2 = centerY + radius / 1.5 * sin(middleAngle1);
     dots.add(Offset(outerX2, outerY2));

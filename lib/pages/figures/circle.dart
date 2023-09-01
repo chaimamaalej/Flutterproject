@@ -1,7 +1,10 @@
 import 'dart:math';
 import 'dart:async';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stage/pages/games.dart';
 
 void main() {
   runApp(Circle());
@@ -46,8 +49,8 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     if (dotsConnected == connectDots.length) {
-    return; // If the game is already completed, do not process further user drawing.
-  }
+      return; // If the game is already completed, do not process further user drawing.
+    }
 
     for (int i = 0; i < connectDots.length; i++) {
       if ((userDot - connectDots[i]).distance < 10.0) {
@@ -65,16 +68,32 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void startTimer() {
-  timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-    setState(() {
-      secondsElapsed += 100; // Increment by 100 milliseconds
-    });
+    timer = Timer.periodic(Duration(milliseconds: 100), (timer) async {
+      setState(() {
+        secondsElapsed += 100; // Increment by 100 milliseconds
+      });
 
-    if (dotsConnected == connectDots.length) {
-      stopTimer();
-    }
-  });
-}
+      if (dotsConnected == connectDots.length) {
+        stopTimer();
+        final currentUser = FirebaseAuth.instance.currentUser!;
+        CollectionReference gameStatus =
+            FirebaseFirestore.instance.collection('game_status');
+
+        QuerySnapshot querySnapshot =
+            await gameStatus.where('email', isEqualTo: currentUser.email).get();
+
+        await gameStatus.doc(querySnapshot.docs[0].id).update({
+          'scores': FieldValue.arrayUnion([score]),
+          'durations': FieldValue.arrayUnion([secondsElapsed]),
+          'progressOrdinal': FieldValue.increment(1),
+        });
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => GamesPage()),
+        );
+      }
+    });
+  }
 
   void checkScore() {
     int connectedDots = 0;

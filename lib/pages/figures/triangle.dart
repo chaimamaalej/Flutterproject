@@ -1,9 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stage/pages/figures/circle.dart';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:stage/pages/games.dart';
 
 void main() {
   runApp(Triangle());
@@ -98,13 +101,31 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void startTimer() {
-  timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+  timer = Timer.periodic(Duration(milliseconds: 100), (timer) async {
     setState(() {
       secondsElapsed += 100; // Increment by 100 milliseconds
     });
 
     if (dotsConnected == connectDots.length) {
       stopTimer();
+
+      final currentUser = FirebaseAuth.instance.currentUser!;
+      CollectionReference gameStatus =
+          FirebaseFirestore.instance.collection('game_status');
+
+      QuerySnapshot querySnapshot =
+          await gameStatus.where('email', isEqualTo: currentUser.email).get();
+
+      await gameStatus.doc(querySnapshot.docs[0].id).update({
+        'scores': FieldValue.arrayUnion([score]),
+        'durations': FieldValue.arrayUnion([secondsElapsed]),
+        'progressOrdinal': FieldValue.increment(1),
+      });
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => GamesPage()),
+      );
+
     }
   });
 }
@@ -126,7 +147,6 @@ class _GameScreenState extends State<GameScreen> {
 
     if (dotsConnected == connectDots.length) {
       stopTimer();
-      _congratulationsDialog(context);
     }
   }
 
@@ -135,25 +155,6 @@ class _GameScreenState extends State<GameScreen> {
     timer = null;
   }
 
-  void _congratulationsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Congratulations!"),
-          content: Text("You did great, well done!"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text("Next"),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   bool isNeighborDot(Offset p1, Offset p2) {
     for (int i = 0; i < connectDots.length; i++) {
