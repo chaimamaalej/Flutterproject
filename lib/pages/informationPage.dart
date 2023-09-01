@@ -4,7 +4,6 @@ import 'medicalreview.dart';
 import '../pages/navbar.dart';
 
 class InformationPage extends StatelessWidget {
-
   const InformationPage({Key? key}) : super(key: key);
 
   @override
@@ -12,9 +11,9 @@ class InformationPage extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(14.0),
-        child: Center( // Center the column containing buttons
+        child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start, // Align buttons to the center of the screen vertically
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // Button to navigate to GamesPage
               MaterialButton(
@@ -29,7 +28,6 @@ class InformationPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(28),
                 ),
                 onPressed: () {
-                  // Add your navigation logic here
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -49,7 +47,10 @@ class InformationPage extends StatelessWidget {
                     SizedBox(height: 6),
                     Text(
                       'Play',
-                      style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 6),
                   ],
@@ -91,7 +92,10 @@ class InformationPage extends StatelessWidget {
                     SizedBox(height: 6),
                     Text(
                       'Medical Review',
-                      style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 6),
                   ],

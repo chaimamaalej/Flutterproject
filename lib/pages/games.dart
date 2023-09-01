@@ -49,7 +49,7 @@ class _GamesPageState extends State<GamesPage> {
     return FutureBuilder<QuerySnapshot>(
       future: gameStatus.where('email', isEqualTo: currentUser.email).get(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
           QueryDocumentSnapshot<Object?> data = snapshot.data!.docs[0];
 
           int index = data['progressOrdinal'];
