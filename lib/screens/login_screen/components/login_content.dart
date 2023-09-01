@@ -248,8 +248,9 @@ class _LoginContentState extends State<LoginContent>
 
   @override
   void dispose() {
-    ChangeScreenAnimation.dispose();
-
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 

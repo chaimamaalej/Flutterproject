@@ -35,6 +35,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Widget bottomWidget(double screenWidth) {
     return Container(
       width: 1.5 * screenWidth,

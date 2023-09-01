@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stage/screens/QuestionnairePage.dart';
+import 'package:stage/screens/questionnaire_page.dart';
 
 import 'form_parent.dart';
 
