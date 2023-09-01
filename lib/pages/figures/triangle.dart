@@ -105,7 +105,6 @@ class _GameScreenState extends State<GameScreen> {
 
     if (dotsConnected == connectDots.length) {
       stopTimer();
-      _showDialog(context);
     }
   });
 }

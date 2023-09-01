@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(StarGame());
+  runApp(Star());
 }
 
-class StarGame extends StatelessWidget {
+class Star extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

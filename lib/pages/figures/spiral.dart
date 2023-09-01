@@ -1,15 +1,19 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
+import 'package:stage/pages/games.dart';
+
 void main() {
-  runApp(SpiralPage());
+  runApp(Spiral());
   print("Your message here");
 }
 
-class SpiralPage extends StatelessWidget {
+class Spiral extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -48,8 +52,8 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     if (dotsConnected == connectDots.length) {
-    return; // If the game is already completed, do not process further user drawing.
-  }
+      return; // If the game is already completed, do not process further user drawing.
+    }
 
     for (int i = 0; i < connectDots.length; i++) {
       if ((userDot - connectDots[i]).distance < 10.0) {
@@ -67,17 +71,33 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void startTimer() {
-  timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-    setState(() {
-      secondsElapsed += 100; // Increment by 100 milliseconds
+    timer = Timer.periodic(Duration(milliseconds: 100), (timer) async {
+      setState(() {
+        secondsElapsed += 100; // Increment by 100 milliseconds
+      });
+
+      if (dotsConnected == connectDots.length) {
+        stopTimer();
+
+        final currentUser = FirebaseAuth.instance.currentUser!;
+        CollectionReference gameStatus =
+            FirebaseFirestore.instance.collection('game_status');
+
+        QuerySnapshot querySnapshot = await gameStatus.where('email', isEqualTo: currentUser.email).get();
+
+        await gameStatus.doc(querySnapshot.docs[0].id).update({
+          'scores': FieldValue.arrayUnion([score]),
+          'durations': FieldValue.arrayUnion([secondsElapsed]),
+          'progressOrdinal': FieldValue.increment(1),
+        });
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => GamesPage()),
+        );
+              
+      }
     });
-
-    if (dotsConnected == connectDots.length) {
-      stopTimer();
-    }
-  });
-}
-
+  }
 
 
   void checkScore() {
@@ -119,11 +139,11 @@ class _GameScreenState extends State<GameScreen> {
     stopTimer();
     setState(() {
       isDrawing = false;
-      dotsConnected=0;
+      dotsConnected = 0;
       userDots.clear();
       score = 0;
       secondsElapsed = 0;
-      totalConnectedDots=0;
+      totalConnectedDots = 0;
     });
   }
 
@@ -141,7 +161,7 @@ class _GameScreenState extends State<GameScreen> {
           if (!isDrawing) {
             setState(() {
               isDrawing = true; // Start drawing
-           });
+            });
           }
           if ((timer == null) && (dotsConnected != connectDots.length)) {
             startTimer();
@@ -182,7 +202,6 @@ class _GameScreenState extends State<GameScreen> {
                       'Time Elapsed: ${secondsElapsed / 1000} seconds',
                       style: TextStyle(fontSize: 18),
                     ),
-                    
                   ],
                 ),
               ),

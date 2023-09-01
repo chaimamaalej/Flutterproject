@@ -1,9 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stage/pages/figures/circle.dart';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:stage/pages/games.dart';
 
 void main() {
   runApp(LettreR());
@@ -36,7 +39,8 @@ class _GameScreenState extends State<GameScreen> {
   int neighborDots = 0;
   bool correctTriangleFormed = false;
   late AudioPlayer audioPlayer;
-  String audioFilePath = 'assets/mixkit-a-happy-child-532.mp3'; // Replace with the actual path
+  String audioFilePath =
+      'assets/mixkit-a-happy-child-532.mp3'; // Replace with the actual path
 
   @override
   void initState() {
@@ -48,7 +52,6 @@ class _GameScreenState extends State<GameScreen> {
 
   void playAudio() async {
     int result = await audioPlayer.play(audioFilePath, isLocal: true);
-
 
     if (result == 1) {
       // Success
@@ -73,8 +76,8 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     if (dotsConnected == connectDots.length) {
-    return; // If the game is already completed, do not process further user drawing.
-  }
+      return; // If the game is already completed, do not process further user drawing.
+    }
 
     for (int i = 0; i < connectDots.length; i++) {
       if ((userDot - connectDots[i]).distance < 10.0) {
@@ -98,16 +101,32 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void startTimer() {
-  timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-    setState(() {
-      secondsElapsed += 100; // Increment by 100 milliseconds
-    });
+    timer = Timer.periodic(Duration(milliseconds: 100), (timer) async {
+      setState(() {
+        secondsElapsed += 100; // Increment by 100 milliseconds
+      });
 
-    if (dotsConnected == connectDots.length) {
-      stopTimer();
-    }
-  });
-}
+      if (dotsConnected == connectDots.length) {
+        stopTimer();
+        final currentUser = FirebaseAuth.instance.currentUser!;
+        CollectionReference gameStatus =
+            FirebaseFirestore.instance.collection('game_status');
+
+        QuerySnapshot querySnapshot =
+            await gameStatus.where('email', isEqualTo: currentUser.email).get();
+
+        await gameStatus.doc(querySnapshot.docs[0].id).update({
+          'scores': FieldValue.arrayUnion([score]),
+          'durations': FieldValue.arrayUnion([secondsElapsed]),
+          'progressOrdinal': FieldValue.increment(1),
+        });
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => GamesPage()),
+        );
+      }
+    });
+  }
 
   void checkScore() {
     int connectedDots = 0;
@@ -126,6 +145,7 @@ class _GameScreenState extends State<GameScreen> {
 
     if (dotsConnected == connectDots.length) {
       stopTimer();
+      print("00000000000000000000000000");
     }
   }
 
@@ -227,63 +247,62 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   List<Offset> generateDottedLetterR(int numberOfDots, double sideLength) {
-  List<Offset> dots = [];
-  double startX = 150.0;
-  double startY = 150.0;
-  double height = sideLength * sqrt(3) / 2;
+    List<Offset> dots = [];
+    double startX = 150.0;
+    double startY = 150.0;
+    double height = sideLength * sqrt(3) / 2;
 
-  // Left side dots
-  for (int i = numberOfDots ; i > 0; i--) {
-    double fraction = i / (numberOfDots - 2);
-    double y = startY + sideLength * fraction;
-    dots.add(Offset(startX, y));
-  }
-
-// Right diagonal dots
-  for (int i = 0; i < numberOfDots-7; i++) {
-    double fraction = i / (numberOfDots - 1);
-    double x = startX + sideLength * fraction;
-    double y = startY;
-    dots.add(Offset(x, y));
-  }
+    // Left side dots
+    for (int i = numberOfDots; i > 0; i--) {
+      double fraction = i / (numberOfDots - 2);
+      double y = startY + sideLength * fraction;
+      dots.add(Offset(startX, y));
+    }
 
 // Right diagonal dots
-  for (int i = 0; i < numberOfDots-8; i++) {
-    double fraction = i / (numberOfDots - 1);
-    double x = startX + sideLength * fraction +20;
-    double y = startY+111;
-    dots.add(Offset(x, y));
-  }
-  
-  // Diagonal line of dots
-  for (int i = 0; i < numberOfDots - 6; i++) {
-    double x = startX + sideLength * i / (numberOfDots - 3);
-    double y = startY + sideLength * i / (numberOfDots - 4)+110;
-    dots.add(Offset(x+20, y+20));
-  }
+    for (int i = 0; i < numberOfDots - 7; i++) {
+      double fraction = i / (numberOfDots - 1);
+      double x = startX + sideLength * fraction;
+      double y = startY;
+      dots.add(Offset(x, y));
+    }
 
-  for (int i = numberOfDots-2; i > 6; i--) {
-    double angle = pi * (2*i / (numberOfDots -3));
-    double x = startX + sideLength / 2 + cos(angle) * (sideLength-145)-40;
-    double y = startY + sideLength / 2 + sin(angle) * (sideLength-145)-45;
-    dots.add(Offset(x, y));
-  }
+// Right diagonal dots
+    for (int i = 0; i < numberOfDots - 8; i++) {
+      double fraction = i / (numberOfDots - 1);
+      double x = startX + sideLength * fraction + 20;
+      double y = startY + 111;
+      dots.add(Offset(x, y));
+    }
 
-  // Add a few extra dots to refine the shape
-  if (numberOfDots > 5) {
-    // dots.add(Offset(x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2));
-    // dots.add(Offset(x2 + (x3 - x2) / 2, y2 + (y3 - y2) / 2));
-    // Add more extra dots if desired
-  }
-  
-  // Add a few extra dots to refine the shape
-  if (numberOfDots > 5) {
-    // dots.add(Offset(x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2));
-    // dots.add(Offset(x2 + (x3 - x2) / 2, y2 + (y3 - y2) / 2));
-    // Add more extra dots if desired
-  }
+    // Diagonal line of dots
+    for (int i = 0; i < numberOfDots - 6; i++) {
+      double x = startX + sideLength * i / (numberOfDots - 3);
+      double y = startY + sideLength * i / (numberOfDots - 4) + 110;
+      dots.add(Offset(x + 20, y + 20));
+    }
 
-  return dots;
-}
+    for (int i = numberOfDots - 2; i > 6; i--) {
+      double angle = pi * (2 * i / (numberOfDots - 3));
+      double x = startX + sideLength / 2 + cos(angle) * (sideLength - 145) - 40;
+      double y = startY + sideLength / 2 + sin(angle) * (sideLength - 145) - 45;
+      dots.add(Offset(x, y));
+    }
 
+    // Add a few extra dots to refine the shape
+    if (numberOfDots > 5) {
+      // dots.add(Offset(x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2));
+      // dots.add(Offset(x2 + (x3 - x2) / 2, y2 + (y3 - y2) / 2));
+      // Add more extra dots if desired
+    }
+
+    // Add a few extra dots to refine the shape
+    if (numberOfDots > 5) {
+      // dots.add(Offset(x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2));
+      // dots.add(Offset(x2 + (x3 - x2) / 2, y2 + (y3 - y2) / 2));
+      // Add more extra dots if desired
+    }
+
+    return dots;
+  }
 }
