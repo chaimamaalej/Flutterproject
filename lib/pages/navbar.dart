@@ -2,6 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:stage/screens/home_page.dart';
+import 'package:stage/screens/login_screen/components/login_content.dart';
+import '../screens/login_screen/login_screen.dart';
+
 
 class NavBar extends StatefulWidget {
   final bool isMusicOn;
@@ -127,8 +131,9 @@ class _NavBarState extends State<NavBar> {
               style: TextStyle(fontSize: 20),
             ),
             onTap: () async {
-              await FirebaseAuth.instance.signOut();
+              // await FirebaseAuth.instance.signOut();
               Navigator.pop(context); // Close the drawer
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
             },
           ),
         ],

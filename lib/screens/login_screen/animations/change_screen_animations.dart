@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../components/login_content.dart';
 
 class ChangeScreenAnimation {
-  static late final AnimationController topTextController;
+  static late final AnimationController _topTextController;
   static late final Animation<Offset> topTextAnimation;
 
-  static late final AnimationController bottomTextController;
+  static late final AnimationController _bottomTextController;
   static late final Animation<Offset> bottomTextAnimation;
 
   static final List<AnimationController> createAccountControllers = [];
@@ -36,7 +36,7 @@ class ChangeScreenAnimation {
     required int createAccountItems,
     required int loginItems,
   }) {
-    topTextController = AnimationController(
+    _topTextController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 200),
     );
@@ -44,10 +44,10 @@ class ChangeScreenAnimation {
     topTextAnimation = _createAnimation(
       begin: Offset.zero,
       end: const Offset(-1.2, 0),
-      parent: topTextController,
+      parent: _topTextController,
     );
 
-    bottomTextController = AnimationController(
+    _bottomTextController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 200),
     );
@@ -55,7 +55,7 @@ class ChangeScreenAnimation {
     bottomTextAnimation = _createAnimation(
       begin: Offset.zero,
       end: const Offset(0, 1.7),
-      parent: bottomTextController,
+      parent: _bottomTextController,
     );
 
     for (var i = 0; i < createAccountItems; i++) {
@@ -93,10 +93,12 @@ class ChangeScreenAnimation {
     }
   }
 
-  static void dispose() {
+  @override
+  void dispose() {
+    _topTextController.dispose();
+    _bottomTextController.dispose();
+    _topTextController.dispose();
     for (final controller in [
-      topTextController,
-      bottomTextController,
       ...createAccountControllers,
       ...loginControllers,
     ]) {
@@ -107,8 +109,8 @@ class ChangeScreenAnimation {
   static Future<void> forward() async {
     isPlaying = true;
 
-    topTextController.forward();
-    await bottomTextController.forward();
+    _topTextController.forward();
+    await _bottomTextController.forward();
 
     for (final controller in [
       ...createAccountControllers,
@@ -118,8 +120,8 @@ class ChangeScreenAnimation {
       await Future.delayed(const Duration(milliseconds: 100));
     }
 
-    bottomTextController.reverse();
-    await topTextController.reverse();
+    _bottomTextController.reverse();
+    await _topTextController.reverse();
 
     isPlaying = false;
   }
@@ -127,8 +129,8 @@ class ChangeScreenAnimation {
   static Future<void> reverse() async {
     isPlaying = true;
 
-    topTextController.forward();
-    await bottomTextController.forward();
+    _topTextController.forward();
+    await _bottomTextController.forward();
 
     for (final controller in [
       ...loginControllers.reversed,
@@ -138,8 +140,8 @@ class ChangeScreenAnimation {
       await Future.delayed(const Duration(milliseconds: 100));
     }
 
-    bottomTextController.reverse();
-    await topTextController.reverse();
+    _bottomTextController.reverse();
+    await _topTextController.reverse();
 
     isPlaying = false;
   }
