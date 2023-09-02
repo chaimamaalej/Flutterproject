@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
       future: gameStatus.get(),
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-          List<QueryDocumentSnapshot<Object?>> games = snapshot.data!.docs;
+          List<QueryDocumentSnapshot<Object?>> playedGames = snapshot.data!.docs;
           return Scaffold(
             appBar: AppBar(title: Text('Home')),
             body: Padding(
@@ -145,9 +145,9 @@ class _HomePageState extends State<HomePage> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
-                          title: Text('${games[index]['email']}'),
+                          title: Text('${playedGames[index]['email']}'),
                           subtitle: Text(
-                              'Scores: ${games[index]['scores']}, Durations: ${games[index]['durations']}'));
+                              'Scores: ${playedGames[index]['scores']}, Durations: ${playedGames[index]['durations']}, games: ${playedGames[index]['games']}'));
                     },
                   ),
                 ],
