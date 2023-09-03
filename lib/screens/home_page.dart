@@ -198,6 +198,13 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ],
                                   ),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons
+                                        .rate_review), // Add an appropriate icon
+                                    onPressed: () {
+                                      // Add your review functionality here
+                                    },
+                                  ),
                                 ),
                               );
                             }
