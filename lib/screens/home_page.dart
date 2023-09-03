@@ -110,57 +110,98 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildDoctorPage(QueryDocumentSnapshot<Object?> user) {
-    CollectionReference gameStatus =
-        FirebaseFirestore.instance.collection('game_status');
+Widget buildDoctorPage(QueryDocumentSnapshot<Object?> user) {
+  CollectionReference gameStatus =
+      FirebaseFirestore.instance.collection('game_status');
 
-    return FutureBuilder<QuerySnapshot>(
-      future: gameStatus.get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-          List<QueryDocumentSnapshot<Object?>> playedGames = snapshot.data!.docs;
-          return Scaffold(
-            appBar: AppBar(title: Text('Home')),
-            body: Padding(
-              padding: EdgeInsets.all(32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Doctor logged in as',
-                    style: TextStyle(fontSize: 16),
+  return FutureBuilder<QuerySnapshot>(
+    future: gameStatus.get(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+        List<QueryDocumentSnapshot<Object?>> playedGames =
+            snapshot.data!.docs;
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Doctor Dashboard'),
+          ),
+          body: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Welcome, Doctor',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-                  SizedBox(height: 16),
-                  Text(
-                    "${user['firstName']} ${user['lastName']}",
-                    style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "${user['firstName']} ${user['lastName']}",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.blue,
                   ),
-                  SizedBox(height: 40),
-                  Text(
-                    "List of user games",
-                    style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 24),
+                Text(
+                  "List of User Games",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  ListView.builder(
-                    shrinkWrap: true,
+                ),
+                SizedBox(height: 16),
+                Expanded(
+                  child: ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                          title: Text('${playedGames[index]['email']}'),
-                          subtitle: Text(
-                              'Scores: ${playedGames[index]['scores']}, Durations: ${playedGames[index]['durations']}, games: ${playedGames[index]['games']}'));
+                      return Card(
+                        elevation: 2,
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        child: ListTile(
+                          title: Text(
+                            'User: ${playedGames[index]['email']}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Scores: ${playedGames[index]['scores']}',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              Text(
+                                'Durations: ${playedGames[index]['durations']}',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              Text(
+                                'Suggested Games: ${playedGames[index]['games']}',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
                     },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        }
-        return Center(
-          child: CircularProgressIndicator(),
+          ),
         );
-      },
-    );
-  }
+      }
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    },
+  );
+}
+
 
   Widget buildParentPage(QueryDocumentSnapshot<Object?> user) {
     return Scaffold(
