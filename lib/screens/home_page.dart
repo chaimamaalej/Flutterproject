@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:stage/pages/history.dart';
 import 'package:stage/pages/informationPage.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:stage/screens/submit_review_page.dart';
 import '../components/bottom_nav_bar.dart';
 import '../pages/informationPage.dart';
 import '../pages/navbar.dart';
@@ -202,6 +203,23 @@ class _HomePageState extends State<HomePage> {
                                     icon: Icon(Icons
                                         .rate_review), // Add an appropriate icon
                                     onPressed: () {
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SubmitReviewPage(
+                                                    email: userData['email'],
+                                                    firstName:
+                                                        userData['firstName'],
+                                                    lastName:
+                                                        userData['lastName'],
+                                                    games: playedGames[index]
+                                                        ['games'],
+                                                    scores: playedGames[index]
+                                                        ['scores'],
+                                                    durations:
+                                                        playedGames[index]
+                                                            ['durations'])),
+                                      );
                                       // Add your review functionality here
                                     },
                                   ),
