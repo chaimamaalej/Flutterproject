@@ -3,41 +3,81 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MedicalReviewPage extends StatelessWidget {
+  final currentUser = FirebaseAuth.instance.currentUser!;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
+  CollectionReference reviews =
+      FirebaseFirestore.instance.collection('medical_reviews');
+  CollectionReference gameStatus =
+      FirebaseFirestore.instance.collection('game_status');
+
+  Widget buildReviewList() {
+    return FutureBuilder<QuerySnapshot>(
+      future: reviews.where('patientEmail', isEqualTo: currentUser.email).get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(
+            child: Text('No reviews found.'),
+          );
+        } else {
+          List<QueryDocumentSnapshot<Object?>> reviewsList = snapshot.data!.docs;
+          return Expanded(
+            child: ListView.builder(
+              itemCount: reviewsList.length,
+              itemBuilder: (BuildContext context, int index) {
+                final review = reviewsList[index];
+
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 8),
+                  child: ListTile(
+                    title: Text(
+                      'Remark: ${review['content']}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Score: ${review['scores']}'),
+                        Text(
+                          'Duration: ${review['durations']}',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                        Text(
+                          'Games: ${review['games']}',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                        Text(
+                          'Doctor email: ${review['doctorEmail']}',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
+  }
 
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser!;
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
     return FutureBuilder<QuerySnapshot>(
       future: users.where('email', isEqualTo: currentUser.email).get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-          QueryDocumentSnapshot<Object?> data = snapshot.data!.docs[0];
-
-          List<Map<String, dynamic>> reviews = [
-            {
-              'score': 85,
-              'duration': '5 minutes',
-              'doctorRemark': 'Good progress in focusing.',
-              'games': ['spiral', 'letter_r'],
-              'doctor': 'John Smith',
-            },
-            {
-              'score': 92,
-              'duration': '2 minutes',
-              'doctorRemark': 'Impressive attention span.',
-              'games': ['spiral', 'letter_r'],
-              'doctor': 'Emma Johnson',
-            },
-            {
-              'score': 78,
-              'duration': '9 minutes',
-              'doctorRemark': 'Needs improvement in concentration.',
-              'games': ['spiral', 'letter_r'],
-              'doctor': 'David Anderson',
-            },
-          ];
+      builder: (userContext, userSnapshot) {
+        if (userSnapshot.hasData && userSnapshot.data!.docs.isNotEmpty) {
+          QueryDocumentSnapshot<Object?> data = userSnapshot.data!.docs[0];
 
           return Scaffold(
             appBar: AppBar(
@@ -63,44 +103,7 @@ class MedicalReviewPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: reviews.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final review = reviews[index];
-                        return Card(
-                          margin: EdgeInsets.symmetric(vertical: 8),
-                          child: ListTile(
-                            title: Text(
-                              'Remark: ${review['doctorRemark']}',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Score: ${review['score']}'),
-                                Text(
-                                  'Duration: ${review['duration']}',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
-                                Text(
-                                  'Games: ${review['games'].join(', ')}',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
-                                Text(
-                                  'Doctor: ${review['doctor']}',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  buildReviewList()
                 ],
               ),
             ),

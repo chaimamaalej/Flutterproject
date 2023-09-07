@@ -69,7 +69,7 @@ class SubmitReviewPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 CollectionReference reviews =
-                    FirebaseFirestore.instance.collection('reviews');
+                    FirebaseFirestore.instance.collection('medical_reviews');
                 final currentUser = FirebaseAuth.instance.currentUser!;
 
                 await reviews
@@ -77,6 +77,9 @@ class SubmitReviewPage extends StatelessWidget {
                       'patientEmail': email,
                       'doctorEmail': currentUser.email,
                       'content': textFieldController.text,
+                      'scores': scores,
+                      'games': games,
+                      'durations': durations,
                     })
                     .then((value) => print("Review created"))
                     .catchError((error) => print("$error"));
