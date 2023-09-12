@@ -40,6 +40,30 @@ class _GamesPageState extends State<GamesPage> {
     });
   }
 
+  Widget gamesCompleted() {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Congratulations!'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'You finished all the games, well done.',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 20)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser!;
@@ -55,10 +79,7 @@ class _GamesPageState extends State<GamesPage> {
           int index = data['progressOrdinal'];
 
           if (index == data['games'].length) {
-            return Text(
-              'You finished all the games, well done. Return to the home page',
-              style: TextStyle(fontSize: 20),
-            );
+            return gamesCompleted();
           }
           String currentGame = data['games'][index];
           switch (currentGame) {
