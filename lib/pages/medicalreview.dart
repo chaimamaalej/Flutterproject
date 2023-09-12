@@ -27,7 +27,8 @@ class MedicalReviewPage extends StatelessWidget {
             child: Text('No reviews found.'),
           );
         } else {
-          List<QueryDocumentSnapshot<Object?>> reviewsList = snapshot.data!.docs;
+          List<QueryDocumentSnapshot<Object?>> reviewsList =
+              snapshot.data!.docs;
           return Expanded(
             child: ListView.builder(
               itemCount: reviewsList.length,
@@ -83,29 +84,35 @@ class MedicalReviewPage extends StatelessWidget {
             appBar: AppBar(
               title: Text('Medical Reviews Dashboard'),
             ),
-            body: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Welcome, ${data['firstName']}',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+            body: Stack(
+              children: [
+                // Background image
+                Image.asset(
+                  'assets/images/dct.jpg', // Replace with the path to your image
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 14),
+                        Text(
+                          'Medical Reviews:',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        buildReviewList(),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 24),
-                  Text(
-                    'Medical Reviews:',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  buildReviewList()
-                ],
-              ),
+                ),
+              ],
             ),
           );
         }

@@ -132,18 +132,10 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Welcome, Doctor',
+                    'Welcome Doctor ${user['firstName']} ${user['lastName']}',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "${user['firstName']} ${user['lastName']}",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.blue,
                     ),
                   ),
                   SizedBox(height: 24),
