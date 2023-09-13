@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(Icons.logout),
                     onPressed: () async {
                       await FirebaseAuth.instance.signOut();
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                     },
                   ),
                 ],

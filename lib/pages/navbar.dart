@@ -130,7 +130,7 @@ class _NavBarState extends State<NavBar> {
             ),
             onTap: () async {
               await FirebaseAuth.instance.signOut();
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
             },
           ),
         ],
