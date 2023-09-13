@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HistoryPage extends StatelessWidget {
@@ -5,19 +7,52 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    CollectionReference gameStatus =
+        FirebaseFirestore.instance.collection('game_status');
+
     return SafeArea(
-      child: Center( // Center the content vertically and horizontally
+      child: Center(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Align the content to the center vertically
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Heading
               const Text(
                 'Games played',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
-              // Other widgets related to your CartPage
+              FutureBuilder<QuerySnapshot>(
+                future: gameStatus
+                    .where('email', isEqualTo: currentUser?.email)
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Text('No games played yet.');
+                  } else {
+                    List<QueryDocumentSnapshot<Object?>> playedGames =
+                        snapshot.data!.docs;
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: playedGames[0]['progressOrdinal'],
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(
+                              'Game: ${playedGames[0]['games'][index]}\nScore: ${playedGames[0]['scores'][index]}\nDuration: ${playedGames[0]['durations'][index]}',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
             ],
           ),
         ),
