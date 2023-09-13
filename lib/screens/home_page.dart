@@ -208,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                                         Text(
                                           'Suggested Games: ${playedGames[index]['games']}',
                                           style: TextStyle(fontSize: 14),
-                                        ),
+                                        ),                                     
                                       ],
                                     ),
                                     trailing: IconButton(
@@ -220,10 +220,12 @@ class _HomePageState extends State<HomePage> {
                                               builder: (context) =>
                                                   SubmitReviewPage(
                                                       email: userData['email'],
-                                                      firstName:
-                                                          userData['firstName'],
-                                                      lastName:
-                                                          userData['lastName'],
+                                                      childFirstName:
+                                                          userData['childFirstName'],
+                                                      age:
+                                                          userData['age'],                                                          
+                                                      childLastName:
+                                                          userData['childLastName'],
                                                       games: playedGames[index]
                                                           ['games'],
                                                       scores: playedGames[index]

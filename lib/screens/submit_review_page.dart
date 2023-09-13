@@ -7,16 +7,18 @@ import 'form_doctor.dart';
 
 class SubmitReviewPage extends StatelessWidget {
   final String email;
-  final String firstName;
-  final String lastName;
+  final String childFirstName;
+  final String childLastName;
+  final int age;  
   final List<dynamic> scores;
   final List<dynamic> games;
   final List<dynamic> durations;
 
   SubmitReviewPage(
       {required this.email,
-      required this.firstName,
-      required this.lastName,
+      required this.childFirstName,
+      required this.childLastName,
+      required this.age,
       required this.scores,
       required this.games,
       required this.durations});
@@ -55,7 +57,11 @@ class SubmitReviewPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Fullname: ${firstName} ${lastName}',
+                      'Fullname: ${childFirstName} ${childLastName}',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      'Age: ${age}',
                       style: TextStyle(fontSize: 16),
                     ),
                     DataTable(
