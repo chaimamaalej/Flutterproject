@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stage/screens/form_child.dart';
+import 'package:stage/screens/home_page.dart';
 
 import 'form_doctor.dart';
 
@@ -33,18 +34,20 @@ class SubmitReviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Review Page'),
-          leading: IconButton(
+      appBar: AppBar(
+        title: Text('Review Page'),
+        leading: IconButton(
           icon: Icon(Icons.arrow_back), // Use the back icon
           color: Colors.white,
           onPressed: () {
-            Navigator.of(context).pop(); // Navigate back to the previous page
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
           },
         ),
-          centerTitle: true,
-        ),
-        body: Stack(
+        centerTitle: true,
+      ),
+      body: Stack(
         children: [
           // Background image
           Image.asset(
@@ -56,126 +59,127 @@ class SubmitReviewPage extends StatelessWidget {
           SingleChildScrollView(
             child: Center(
               child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 50, bottom: 50),
-                child: Text(
-                  'Review page',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(16),
-                color: Colors.white,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Fullname: ${childFirstName} ${childLastName}',
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 50, bottom: 50),
+                    child: Text(
+                      'Review page',
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      'Age: ${age}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'Mobile Number: ${mobileNumber}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'E-mail: ${email}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'Mental score: ${mentalScore} (0 best, 30 worst)',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    DataTable(
-                      columns: [
-                        DataColumn(
-                          label: Text(
-                            'Game',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(16),
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Fullname: ${childFirstName} ${childLastName}',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        DataColumn(
-                          label: Text(
-                            'Score',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
+                        Text(
+                          'Age: ${age}',
+                          style: TextStyle(fontSize: 16),
                         ),
-                        DataColumn(
-                          label: Text(
-                            'Duration(ms)',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
+                        Text(
+                          'Mobile Number: ${mobileNumber}',
+                          style: TextStyle(fontSize: 16),
                         ),
-                      ],
-                      rows: List<DataRow>.generate(
-                        games.length,
-                        (index) => DataRow(
-                          cells: [
-                            DataCell(
-                              Text(
-                                games[index].toString(),
-                                style: TextStyle(fontSize: 16),
+                        Text(
+                          'E-mail: ${email}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          'Mental score: ${mentalScore} (0 best, 30 worst)',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        DataTable(
+                          columns: [
+                            DataColumn(
+                              label: Text(
+                                'Game',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            DataCell(
-                              Text(
-                                scores[index].toString(),
-                                style: TextStyle(fontSize: 16),
+                            DataColumn(
+                              label: Text(
+                                'Score',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            DataCell(
-                              Text(
-                                durations[index].toString(),
-                                style: TextStyle(fontSize: 16),
+                            DataColumn(
+                              label: Text(
+                                'Duration(ms)',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
+                          rows: List<DataRow>.generate(
+                            games.length,
+                            (index) => DataRow(
+                              cells: [
+                                DataCell(
+                                  Text(
+                                    games[index].toString(),
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    scores[index].toString(),
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    durations[index].toString(),
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: textFieldController,
-                decoration: InputDecoration(
-                  labelText: 'Review',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  CollectionReference reviews =
-                      FirebaseFirestore.instance.collection('medical_reviews');
-                  final currentUser = FirebaseAuth.instance.currentUser!;
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: textFieldController,
+                    decoration: InputDecoration(
+                      labelText: 'Review',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      CollectionReference reviews = FirebaseFirestore.instance
+                          .collection('medical_reviews');
+                      final currentUser = FirebaseAuth.instance.currentUser!;
 
-                  await reviews
-                      .add({
-                        'patientEmail': email,
-                        'doctorEmail': currentUser.email,
-                        'content': textFieldController.text,
-                        'scores': scores,
-                        'games': games,
-                        'durations': durations,
-                      })
-                      .then((value) => print("Review created"))
-                      .catchError((error) => print("$error"));
-                },
-                child: Text('Submit'),
-              ),
-             ],
+                      await reviews
+                          .add({
+                            'patientEmail': email,
+                            'doctorEmail': currentUser.email,
+                            'content': textFieldController.text,
+                            'scores': scores,
+                            'games': games,
+                            'durations': durations,
+                          })
+                          .then((value) => print("Review created"))
+                          .catchError((error) => print("$error"));
+                    },
+                    child: Text('Submit'),
+                  ),
+                ],
               ),
             ),
           ),
