@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                                   margin: EdgeInsets.symmetric(vertical: 8),
                                   child: ListTile(
                                     title: Text(
-                                      'User: ${userData['firstName']} ${userData['lastName']}',
+                                      'User: ${userData['childFirstName']} ${userData['childLastName']}',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
