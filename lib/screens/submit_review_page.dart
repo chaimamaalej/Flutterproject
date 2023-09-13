@@ -25,68 +25,120 @@ class SubmitReviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Review Page'),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/med.jpg'), // Replace with your image path
+          fit: BoxFit.cover, // Adjust the fit as needed
+        ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Review page',
-              style: TextStyle(fontSize: 30),
-            ),
-            SizedBox(height: 20), // Add some spacing between text and button
-            Text(
-              'Fullname: ${firstName} ${lastName}', // Display the email as a TextView
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Scores: ${scores}', // Display the email as a TextView
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Games: ${games}', // Display the email as a TextView
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Durations: ${durations}', // Display the email as a TextView
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(
-                height:
-                    20), // Add some spacing between email TextView and text field
-            TextField(
-              controller: textFieldController,
-              decoration: InputDecoration(
-                labelText: 'Review',
-                border: OutlineInputBorder(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Review Page'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 20),
+                child: Text(
+                  'Review page',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-            SizedBox(
-                height: 20), // Add some spacing between text field and button
-            ElevatedButton(
-              onPressed: () async {
-                CollectionReference reviews =
-                    FirebaseFirestore.instance.collection('medical_reviews');
-                final currentUser = FirebaseAuth.instance.currentUser!;
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(16),
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Fullname: ${firstName} ${lastName}',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    DataTable(
+                      columns: [
+                        DataColumn(
+                          label: Text(
+                            'Game',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Score',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Duration',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                      rows: List<DataRow>.generate(
+                        games.length,
+                        (index) => DataRow(
+                          cells: [
+                            DataCell(
+                              Text(
+                                games[index].toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                scores[index].toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                durations[index].toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: textFieldController,
+                decoration: InputDecoration(
+                  labelText: 'Review',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  CollectionReference reviews =
+                      FirebaseFirestore.instance.collection('medical_reviews');
+                  final currentUser = FirebaseAuth.instance.currentUser!;
 
-                await reviews
-                    .add({
-                      'patientEmail': email,
-                      'doctorEmail': currentUser.email,
-                      'content': textFieldController.text,
-                      'scores': scores,
-                      'games': games,
-                      'durations': durations,
-                    })
-                    .then((value) => print("Review created"))
-                    .catchError((error) => print("$error"));
-              },
-              child: Text('Submit'),
-            ),
-          ],
+                  await reviews
+                      .add({
+                        'patientEmail': email,
+                        'doctorEmail': currentUser.email,
+                        'content': textFieldController.text,
+                        'scores': scores,
+                        'games': games,
+                        'durations': durations,
+                      })
+                      .then((value) => print("Review created"))
+                      .catchError((error) => print("$error"));
+                },
+                child: Text('Submit'),
+              ),
+            ],
+          ),
         ),
       ),
     );

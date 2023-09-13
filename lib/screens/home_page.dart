@@ -124,109 +124,128 @@ class _HomePageState extends State<HomePage> {
               snapshot.data!.docs;
           return Scaffold(
             appBar: AppBar(
-              title: Text('Doctor Dashboard'),
-            ),
-            body: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              title: Row(
                 children: [
-                  Text(
-                    'Welcome Doctor ${user['firstName']} ${user['lastName']}',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 24),
-                  Text(
-                    "List of User Games",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return FutureBuilder<QuerySnapshot>(
-                          future: users
-                              .where('email',
-                                  isEqualTo: playedGames[index]['email'])
-                              .get(),
-                          builder: (context2, snapshot2) {
-                            if (snapshot2.hasData &&
-                                snapshot2.data!.docs.isNotEmpty) {
-                              QueryDocumentSnapshot<Object?> userData =
-                                  snapshot2.data!.docs[0];
-
-                              return Card(
-                                elevation: 4,
-                                margin: EdgeInsets.symmetric(vertical: 8),
-                                child: ListTile(
-                                  title: Text(
-                                    'User: ${userData['firstName']} ${userData['lastName']}',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Scores: ${playedGames[index]['scores']}',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                      Text(
-                                        'Durations: ${playedGames[index]['durations']}',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                      Text(
-                                        'Suggested Games: ${playedGames[index]['games']}',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(Icons
-                                        .rate_review), // Add an appropriate icon
-                                    onPressed: () {
-                                      Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                SubmitReviewPage(
-                                                    email: userData['email'],
-                                                    firstName:
-                                                        userData['firstName'],
-                                                    lastName:
-                                                        userData['lastName'],
-                                                    games: playedGames[index]
-                                                        ['games'],
-                                                    scores: playedGames[index]
-                                                        ['scores'],
-                                                    durations:
-                                                        playedGames[index]
-                                                            ['durations'])),
-                                      );
-                                      // Add your review functionality here
-                                    },
-                                  ),
-                                ),
-                              );
-                            }
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                  Text('Doctor Dashboard'),
+                  Spacer(), // Creates a flexible space
+                  IconButton(
+                    icon: Icon(Icons.logout), // Use the appropriate logout icon
+                    onPressed: () {
+                      // Add your logout functionality here
+                    },
                   ),
                 ],
+              ),
+            ),
+            body: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/doc.jpg'),
+                  fit: BoxFit.cover, // Adjust the fit as needed
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome Doctor ${user['firstName']} ${user['lastName']}',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                    Text(
+                      "List of User Games",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return FutureBuilder<QuerySnapshot>(
+                            future: users
+                                .where('email',
+                                    isEqualTo: playedGames[index]['email'])
+                                .get(),
+                            builder: (context2, snapshot2) {
+                              if (snapshot2.hasData &&
+                                  snapshot2.data!.docs.isNotEmpty) {
+                                QueryDocumentSnapshot<Object?> userData =
+                                    snapshot2.data!.docs[0];
+
+                                return Card(
+                                  elevation: 4,
+                                  margin: EdgeInsets.symmetric(vertical: 8),
+                                  child: ListTile(
+                                    title: Text(
+                                      'User: ${userData['firstName']} ${userData['lastName']}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Scores: ${playedGames[index]['scores']}',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                        Text(
+                                          'Durations: ${playedGames[index]['durations']}',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                        Text(
+                                          'Suggested Games: ${playedGames[index]['games']}',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(Icons
+                                          .rate_review), // Add an appropriate icon
+                                      onPressed: () {
+                                        Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SubmitReviewPage(
+                                                      email: userData['email'],
+                                                      firstName:
+                                                          userData['firstName'],
+                                                      lastName:
+                                                          userData['lastName'],
+                                                      games: playedGames[index]
+                                                          ['games'],
+                                                      scores: playedGames[index]
+                                                          ['scores'],
+                                                      durations:
+                                                          playedGames[index]
+                                                              ['durations'])),
+                                        );
+                                        // Add your review functionality here
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

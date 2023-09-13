@@ -95,7 +95,7 @@ class MedicalReviewPage extends StatelessWidget {
                 ),
                 SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

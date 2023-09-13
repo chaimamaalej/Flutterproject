@@ -90,7 +90,6 @@ flutter:
         - asset: fonts/GloriaHallelujah-Regular.ttf
 
   assets:
-    - assets/images/facebook.png
     - assets/images/background.jpeg
     - assets/images/form.jpg
     - assets/images/form_doctor.jpg
@@ -98,4 +97,6 @@ flutter:
     - assets/images/play.jpg
     - assets/images/medical.jpg
     - assets/images/dct.jpg
-    
+    - assets/images/kid.jpg
+    - assets/images/doc.jpg
+    - assets/images/med.jpg

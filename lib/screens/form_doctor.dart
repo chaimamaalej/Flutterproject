@@ -134,7 +134,7 @@ class _FormDoctorPageState extends State<FormDoctorPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Successfuly registered'),
+            title: Text('Successfully registered'),
           content: Text('Your user is created'),
             actions: [
               TextButton(

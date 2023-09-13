@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'figures/checkmark.dart';
@@ -17,52 +18,57 @@ class GamesPage extends StatefulWidget {
 }
 
 class _GamesPageState extends State<GamesPage> {
-  int level = 1;
-  int score = 0;
-  Color? backgroundColor = Colors.deepPurple[200]; // Default background color
-
-  final List<Color> colorChoices = [
-    Colors.red,
-    Colors.orange,
-    Colors.yellow,
-    Colors.green,
-    Colors.blue,
-    Colors.deepPurple[200]!,
-  ];
-
-  int currentColorIndex =
-      4; // Index of the default color in the colorChoices list
-
-  void changeBackgroundColor() {
-    setState(() {
-      currentColorIndex = (currentColorIndex + 1) % colorChoices.length;
-      backgroundColor = colorChoices[currentColorIndex];
-    });
-  }
 
   Widget gamesCompleted() {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Congratulations!'),
-      ),
-      body: Center(
+  return Scaffold(
+    appBar: AppBar(
+      title: Text('Congratulations!'),
+    ),
+    body: Center(
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/kid.jpg'),
+            fit: BoxFit.cover, // Adjust the fit as needed
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start, // Align text to the top
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 20), // Add some space at the top
               Text(
-                'You finished all the games, well done.',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                'You finished all the games, well done!',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontFamily: 'Lumanosimo',
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 20)
+              Text(
+                'Go and check the medical reviews.',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Lumanosimo',
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 20),
+              // Add any additional widgets here if needed
             ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+
+  bool showBackgroundImage = false;
 
   @override
   Widget build(BuildContext context) {
