@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
             body: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('images/doc.jpg'),
+                  image: AssetImage('assets/images/doc.jpg'),
                   fit: BoxFit.cover, // Adjust the fit as needed
                 ),
               ),
@@ -198,6 +198,10 @@ class _HomePageState extends State<HomePage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
+                                          'Suggested Games: ${playedGames[index]['games']}',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                        Text(
                                           'Scores: ${playedGames[index]['scores']}',
                                           style: TextStyle(fontSize: 14),
                                         ),
@@ -205,10 +209,6 @@ class _HomePageState extends State<HomePage> {
                                           'Durations: ${playedGames[index]['durations']}',
                                           style: TextStyle(fontSize: 14),
                                         ),
-                                        Text(
-                                          'Suggested Games: ${playedGames[index]['games']}',
-                                          style: TextStyle(fontSize: 14),
-                                        ),                                     
                                       ],
                                     ),
                                     trailing: IconButton(

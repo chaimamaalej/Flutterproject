@@ -11,6 +11,7 @@ class SubmitReviewPage extends StatelessWidget {
   final String childLastName;
   final int age;  
   final int mentalScore; 
+
   final List<dynamic> scores;
   final List<dynamic> games;
   final List<dynamic> durations;
@@ -32,7 +33,8 @@ class SubmitReviewPage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/med.jpg'), // Replace with your image path
+          image: AssetImage(
+              'assets/images/med.jpg'), // Replace with your image path
           fit: BoxFit.cover, // Adjust the fit as needed
         ),
       ),
@@ -60,7 +62,8 @@ class SubmitReviewPage extends StatelessWidget {
                   children: [
                     Text(
                       'Fullname: ${childFirstName} ${childLastName}',
-                      style: TextStyle(fontSize: 16),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'Age: ${age}',
@@ -75,19 +78,22 @@ class SubmitReviewPage extends StatelessWidget {
                         DataColumn(
                           label: Text(
                             'Game',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
                         DataColumn(
                           label: Text(
                             'Score',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
                         DataColumn(
                           label: Text(
-                            'Duration',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            'Duration(in s)',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
