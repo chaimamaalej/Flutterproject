@@ -39,7 +39,7 @@ class InformationPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(
-                      'assets/images/play.jpg', // Replace with your image path
+                      'assets/images/play.jpg', 
                       height: 100,
                       width: 200,
                       fit: BoxFit.cover,
@@ -59,7 +59,7 @@ class InformationPage extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // Button to navigate to MedicalReviewPage
+              
               MaterialButton(
                 minWidth: 100,
                 height: 10,
@@ -72,7 +72,6 @@ class InformationPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(28),
                 ),
                 onPressed: () {
-                  // Add your navigation logic here
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -84,7 +83,7 @@ class InformationPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(
-                      'assets/images/medical.jpg', // Replace with your medical review image path
+                      'assets/images/medical.jpg', 
                       height: 100,
                       width: 200,
                       fit: BoxFit.cover,

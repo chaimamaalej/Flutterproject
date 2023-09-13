@@ -39,7 +39,7 @@ class _NavBarState extends State<NavBar> {
       int nextIndex = (currentIndex + 1) % colorOptions.length;
       _selectedColor = colorOptions[nextIndex];
       widget.setBackgroundColor(
-          _selectedColor); // Call the callback to update homepage color
+          _selectedColor); 
     });
   }
 
@@ -91,20 +91,20 @@ class _NavBarState extends State<NavBar> {
             leading: Icon(Icons.color_lens),
             title: Text(
               'Background Color',
-              style: TextStyle(fontSize: 20), // Set the font size correctly
+              style: TextStyle(fontSize: 20), 
             ),
             onTap:
-                _changeBackgroundColor, // Call the function to change the background color
+                _changeBackgroundColor, 
           ),
           ListTile(
-            leading: Icon(Icons.music_note), // Add the icon here
+            leading: Icon(Icons.music_note), 
             title: Row(
               children: [
                 Text(
                   'Music',
-                  style: TextStyle(fontSize: 20), // Adjust the font size here
+                  style: TextStyle(fontSize: 20), 
                 ),
-                SizedBox(width: 8), // Add spacing between "Music" and status
+                SizedBox(width: 8), 
                 Text(
                   widget.isMusicOn ? 'On' : 'Off',
                   style: TextStyle(
@@ -118,7 +118,7 @@ class _NavBarState extends State<NavBar> {
               value: widget.isMusicOn,
               onChanged: (newValue) {
                 widget.setMusicState(
-                    newValue); // Use the callback to update the state
+                    newValue); 
               },
             ),
           ),

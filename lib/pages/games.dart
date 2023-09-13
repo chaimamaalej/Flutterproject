@@ -24,7 +24,7 @@ class _GamesPageState extends State<GamesPage> {
       appBar: AppBar(
         title: Text('Congratulations!'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back), // You can customize the icon here
+          icon: Icon(Icons.arrow_back), 
           onPressed: () {
             Navigator.pushReplacement(
                 context,
@@ -39,17 +39,17 @@ class _GamesPageState extends State<GamesPage> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images/kid.jpg'),
-              fit: BoxFit.cover, // Adjust the fit as needed
+              fit: BoxFit.cover, 
             ),
           ),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment:
-                  MainAxisAlignment.start, // Align text to the top
+                  MainAxisAlignment.start, 
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20), // Add some space at the top
+                SizedBox(height: 20), 
                 Text(
                   'You finished all the games, well done!',
                   style: TextStyle(
@@ -69,7 +69,6 @@ class _GamesPageState extends State<GamesPage> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 20),
-                // Add any additional widgets here if needed
               ],
             ),
           ),
