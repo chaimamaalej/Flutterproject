@@ -222,6 +222,8 @@ class _HomePageState extends State<HomePage> {
                                                       email: userData['email'],
                                                       childFirstName:
                                                           userData['childFirstName'],
+                                                      mentalScore:
+                                                          playedGames[index]['sum'],                                                          
                                                       age:
                                                           userData['age'],                                                          
                                                       childLastName:

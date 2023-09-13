@@ -10,6 +10,7 @@ class SubmitReviewPage extends StatelessWidget {
   final String childFirstName;
   final String childLastName;
   final int age;  
+  final int mentalScore; 
   final List<dynamic> scores;
   final List<dynamic> games;
   final List<dynamic> durations;
@@ -21,6 +22,7 @@ class SubmitReviewPage extends StatelessWidget {
       required this.age,
       required this.scores,
       required this.games,
+      required this.mentalScore,
       required this.durations});
 
   TextEditingController textFieldController = TextEditingController();
@@ -64,6 +66,10 @@ class SubmitReviewPage extends StatelessWidget {
                       'Age: ${age}',
                       style: TextStyle(fontSize: 16),
                     ),
+                    Text(
+                      'Mental score: ${mentalScore}',
+                      style: TextStyle(fontSize: 16),
+                    ),                    
                     DataTable(
                       columns: [
                         DataColumn(

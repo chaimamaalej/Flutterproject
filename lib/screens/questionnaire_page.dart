@@ -71,6 +71,16 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     childLastName = widget.childLastName;
   }
 
+  int getScore(List<String> questionnaire) {
+    int total = 0;
+
+    for (String item in questionnaire) {
+      int value = int.parse(item);
+      total += value;
+    }
+    return total;
+  }
+
   List<String> getGames(List<String> questionnaire) {
     List<String> games = [];
 
@@ -138,7 +148,8 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
           'games': getGames(questionnaire),
           'scores': [],
           'durations': [],
-          'progressOrdinal': 0
+          'progressOrdinal': 0,
+          'sum': getScore(questionnaire),
         })
         .then((value) => print("Game status created"))
         .catchError((error) => print("$error"));
