@@ -106,7 +106,11 @@ class MedicalReviewPage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        buildReviewList(),
+                        SizedBox(height: 10), // Add some vertical space
+                      Container(
+                        height: 400, // Set an appropriate height constraint
+                        child: buildReviewList(),
+                      ),
                       ],
                     ),
                   ),
