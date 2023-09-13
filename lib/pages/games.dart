@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:stage/screens/home_page.dart';
 
 import 'figures/checkmark.dart';
 import 'figures/circle.dart';
@@ -18,55 +19,64 @@ class GamesPage extends StatefulWidget {
 }
 
 class _GamesPageState extends State<GamesPage> {
-
   Widget gamesCompleted() {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text('Congratulations!'),
-    ),
-    body: Center(
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/kid.jpg'),
-            fit: BoxFit.cover, // Adjust the fit as needed
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Congratulations!'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // You can customize the icon here
+          onPressed: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePage(),
+                ));
+          },
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start, // Align text to the top
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 20), // Add some space at the top
-              Text(
-                'You finished all the games, well done!',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontFamily: 'Lumanosimo',
-                  fontWeight: FontWeight.bold,
+      ),
+      body: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/kid.jpg'),
+              fit: BoxFit.cover, // Adjust the fit as needed
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment:
+                  MainAxisAlignment.start, // Align text to the top
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 20), // Add some space at the top
+                Text(
+                  'You finished all the games, well done!',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontFamily: 'Lumanosimo',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                'Go and check the medical reviews.',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'Lumanosimo',
-                  fontWeight: FontWeight.bold,
+                Text(
+                  'Go and check the medical reviews.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Lumanosimo',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 20),
-              // Add any additional widgets here if needed
-            ],
+                SizedBox(height: 20),
+                // Add any additional widgets here if needed
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   bool showBackgroundImage = false;
 
