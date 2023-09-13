@@ -9,8 +9,9 @@ class SubmitReviewPage extends StatelessWidget {
   final String email;
   final String childFirstName;
   final String childLastName;
-  final int age;  
-  final int mentalScore; 
+  final int age;
+  final int mentalScore;
+  final String mobileNumber;
 
   final List<dynamic> scores;
   final List<dynamic> games;
@@ -22,6 +23,7 @@ class SubmitReviewPage extends StatelessWidget {
       required this.childLastName,
       required this.age,
       required this.scores,
+      required this.mobileNumber,
       required this.games,
       required this.mentalScore,
       required this.durations});
@@ -30,24 +32,34 @@ class SubmitReviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(
-              'assets/images/med.jpg'), // Replace with your image path
-          fit: BoxFit.cover, // Adjust the fit as needed
-        ),
-      ),
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text('Review Page'),
+          leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Use the back icon
+          color: Colors.white,
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigate back to the previous page
+          },
         ),
-        body: Center(
-          child: Column(
+          centerTitle: true,
+        ),
+        body: Stack(
+        children: [
+          // Background image
+          Image.asset(
+            'assets/images/med.jpg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SingleChildScrollView(
+            child: Center(
+              child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 20),
+                margin: EdgeInsets.only(top: 50, bottom: 50),
                 child: Text(
                   'Review page',
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
@@ -70,9 +82,17 @@ class SubmitReviewPage extends StatelessWidget {
                       style: TextStyle(fontSize: 16),
                     ),
                     Text(
-                      'Mental score: ${mentalScore}',
+                      'Mobile Number: ${mobileNumber}',
                       style: TextStyle(fontSize: 16),
-                    ),                    
+                    ),
+                    Text(
+                      'E-mail: ${email}',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      'Mental score: ${mentalScore} (0 best, 30 worst)',
+                      style: TextStyle(fontSize: 16),
+                    ),
                     DataTable(
                       columns: [
                         DataColumn(
@@ -91,7 +111,7 @@ class SubmitReviewPage extends StatelessWidget {
                         ),
                         DataColumn(
                           label: Text(
-                            'Duration(in s)',
+                            'Duration(ms)',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
@@ -155,9 +175,11 @@ class SubmitReviewPage extends StatelessWidget {
                 },
                 child: Text('Submit'),
               ),
-            ],
+             ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

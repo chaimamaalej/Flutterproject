@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
       true; // Tracc:\src\geometry2\lib\components\bottom_nav_bar.dart c:\src\geometry2\lib\components\figure_tile.dartk the state of the music toggle
   late AudioPlayer audioPlayer;
   String audioFilePath =
-      'assets/mixkit-a-happy-child-532.mp3'; // Replace with the actual path
+      'assets/mixkit-a-happy-child-532.mp3'; 
   Color _backgroundColor = Colors.blue; // Default background color
 
   @override
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     audioPlayer = AudioPlayer();
     if (isMusicOn) {
-      playAudio(); // Start playing audio if music is on
+      playAudio(); 
     }
   }
 
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/doc.jpg'),
-                  fit: BoxFit.cover, // Adjust the fit as needed
+                  fit: BoxFit.cover, 
                 ),
               ),
               child: Padding(
@@ -222,6 +222,8 @@ class _HomePageState extends State<HomePage> {
                                                       email: userData['email'],
                                                       childFirstName:
                                                           userData['childFirstName'],
+                                                      mobileNumber:
+                                                          userData['mobileNumber'],
                                                       mentalScore:
                                                           playedGames[index]['sum'],                                                          
                                                       age:
@@ -236,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                                                           playedGames[index]
                                                               ['durations'])),
                                         );
-                                        // Add your review functionality here
+                                       
                                       },
                                     ),
                                   ),

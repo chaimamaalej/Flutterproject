@@ -163,7 +163,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the popup
+                Navigator.pop(context); 
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -192,12 +192,11 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       ),
       body: Stack(
         children: [
-          // Background Image
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
-                    'assets/images/form.jpg'), // Replace with your image path
+                    'assets/images/form.jpg'), 
                 fit: BoxFit.cover,
               ),
             ),

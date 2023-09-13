@@ -80,7 +80,7 @@ class _ParentInfoPageState extends State<ParentInfoPage> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
-                    'assets/images/form.jpg'), // Replace with your image path
+                    'assets/images/form.jpg'), 
                 fit: BoxFit.cover,
               ),
             ),

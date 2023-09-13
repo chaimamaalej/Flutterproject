@@ -11,7 +11,6 @@ class RoleSelectionPage extends StatelessWidget {
   RoleSelectionPage({required this.username ,required this.email, required this.password});
 
   void _showInformation(BuildContext context, String message) {
-    // Show a dialog or a bottom sheet with the desired information
     showDialog(
       context: context,
       builder: (context) {

@@ -86,9 +86,8 @@ class MedicalReviewPage extends StatelessWidget {
             ),
             body: Stack(
               children: [
-                // Background image
                 Image.asset(
-                  'assets/images/dct.jpg', // Replace with the path to your image
+                  'assets/images/dct.jpg', 
                   width: double.infinity,
                   height: double.infinity,
                   fit: BoxFit.cover,

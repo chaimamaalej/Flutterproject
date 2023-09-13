@@ -40,11 +40,17 @@ class HistoryPage extends StatelessWidget {
                       child: ListView.builder(
                         itemCount: playedGames[0]['progressOrdinal'],
                         itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
+                          // Wrap each game with its score and duration in a box
+                          return Container(
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
                               'Game: ${playedGames[0]['games'][index]}\nScore: ${playedGames[0]['scores'][index]}\nDuration: ${playedGames[0]['durations'][index]}',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                              style: TextStyle(fontSize: 16, color: Colors.black),
                             ),
                           );
                         },
