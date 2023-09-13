@@ -28,7 +28,9 @@ class HistoryPage extends StatelessWidget {
                     .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -50,7 +52,8 @@ class HistoryPage extends StatelessWidget {
                             ),
                             child: Text(
                               'Game: ${playedGames[0]['games'][index]}\nScore: ${playedGames[0]['scores'][index]}\nDuration: ${playedGames[0]['durations'][index]}',
-                              style: TextStyle(fontSize: 16, color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
                             ),
                           );
                         },
