@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:stage/pages/history.dart';
 import 'package:stage/pages/informationPage.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:stage/screens/login_screen/login_screen.dart';
 import 'package:stage/screens/submit_review_page.dart';
 import '../components/bottom_nav_bar.dart';
 import '../pages/informationPage.dart';
@@ -127,11 +128,12 @@ class _HomePageState extends State<HomePage> {
               title: Row(
                 children: [
                   Text('Doctor Dashboard'),
-                  Spacer(), // Creates a flexible space
+                  Spacer(),
                   IconButton(
-                    icon: Icon(Icons.logout), // Use the appropriate logout icon
-                    onPressed: () {
-                      // Add your logout functionality here
+                    icon: Icon(Icons.logout),
+                    onPressed: () async {
+                      await FirebaseAuth.instance.signOut();
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                     },
                   ),
                 ],
